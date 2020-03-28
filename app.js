@@ -1,11 +1,11 @@
-const express = require('express');
+const express = require("express");
 
 // Creates express server
 const app = express();
 
 // Index route
-app.get('/', (req, res) => {
-    res.send("<h1>My Tinnies</h1>");
+app.get("/", (req, res) => {
+	res.send("<h1>My Tinnies</h1>");
 });
 
 // Getting port from env or setting to 5000

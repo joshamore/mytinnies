@@ -9,6 +9,10 @@ var USER = 23;
 // Creates express server
 const app = express();
 
+// Adding body parser middleware
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
+
 // Index route
 app.get("/", (req, res) => {
 	res.send("<h1>My Tinnies</h1>");
@@ -53,6 +57,7 @@ app.get("/api/getTinnies/:id", (req, res) => {
 	});
 });
 
+// Drink tinnie route
 app.post("/api/drinkTinnie/", (req, res) => {
 	// Remove one tinnie for user
 	// TODO

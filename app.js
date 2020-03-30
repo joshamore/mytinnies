@@ -1,4 +1,5 @@
 const express = require("express");
+const bodyParser = require("body-parser");
 
 // TODO: Below is for dev only remove before deploying
 const sqlite3 = require("sqlite3").verbose();
@@ -23,13 +24,17 @@ app.get("/api/getTinnies/:id", (req, res) => {
 	const user = parseInt(req.params.id);
 
 	// Opening DB connection
-	let db = new sqlite3.Database("MyTinnies.db", sqlite3.OPEN_READWRITE, err => {
-		if (err) {
-			res.status(500).json({ error: "Database Error" });
-		} else {
-			console.log("Connected to the SQlite database.");
+	let db = new sqlite3.Database(
+		"MyTinnies.db",
+		sqlite3.OPEN_READWRITE,
+		(err) => {
+			if (err) {
+				res.status(500).json({ error: "Database Error" });
+			} else {
+				console.log("Connected to the SQlite database.");
+			}
 		}
-	});
+	);
 
 	// Query to get usre data from DB
 	let sql = `SELECT * FROM tinnies WHERE user_ID=?`;
@@ -51,6 +56,8 @@ app.get("/api/getTinnies/:id", (req, res) => {
 app.post("/api/drinkTinnie/", (req, res) => {
 	// Remove one tinnie for user
 	// TODO
+	console.log(req.body);
+	res.send("Good");
 });
 
 // Getting port from env or setting to 5000

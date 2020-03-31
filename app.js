@@ -88,21 +88,26 @@ app.post("/api/drinkTinnie/", (req, res) => {
 		} else {
 			db.close();
 			if (row.tinnies >= req.body.drank) {
-				console.log(`Yeah mate we got ${row.tinnies}`);
-				// TODO: below isn't working correctly (always returns undefined)
-				// i think this is to do with the async-ness of the DB call -- consider a promise
 				dbHelpers
 					.drinkTinnies(row.tinnies - req.body.drank)
-					.then((res) => console.log(res))
-					.catch((e) => console.log(e));
+					.then((didUpdate) => {
+						if (didUpdate) {
+							res.json({ success: `User drank ${req.body.drank} tinnie(s)` });
+						} else {
+							res.status(500).json({ error: "Error updating user tinnies" });
+						}
+					})
+					.catch((e) => {
+						console.log(e);
+						res.status(500).json({ error: "Error updating user tinnies" });
+					});
 			} else {
-				console.log(`Nah mate we got ${req.body.drank}`);
+				res.status(400).json({
+					error: `User only has ${row.tinnies} and cannot drink ${req.body.drank}`,
+				});
 			}
 		}
 	});
-
-	console.log(req.body.drank);
-	res.send("Good");
 });
 
 // Getting port from env or setting to 5000
@@ -117,9 +122,9 @@ app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 const dbHelpers = {
 	drinkTinnies: (newTinnies) => {
 		/*
-			@args newTinnies = the updated number of tinnies
+			@args newTinnies = the updated number of tinnies for the current user
+			@returns a boolean promise with true if the update was successful or false if unsuccessful
 		*/
-
 		return new Promise((res, rej) => {
 			// Opening DB connection
 			let db = new sqlite3.Database(
@@ -129,12 +134,12 @@ const dbHelpers = {
 					if (err) {
 						rej(Error("Unable to open DB"));
 					} else {
-						console.log("11Connected to the SQlite database.");
+						console.log("Connected to the SQlite database.");
 					}
 				}
 			);
 
-			// Query to get usre data from DB
+			// Query to update user's tinnnies
 			let sql = `UPDATE tinnies SET tinnies = ${newTinnies} WHERE user_id = ?`;
 
 			// Updating DB data and closing
@@ -144,6 +149,7 @@ const dbHelpers = {
 					rej(Error("Unable to access user"));
 				} else {
 					db.close();
+					console.log(`New tinnies: ${newTinnies}`);
 					res(true);
 				}
 			});

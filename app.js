@@ -43,6 +43,7 @@ app.get("/api/getTinnies/:id", (req, res) => {
 	// Query to get usre data from DB
 	let sql = `SELECT * FROM tinnies WHERE user_ID=?`;
 
+	// Getting DB data and closing
 	db.get(sql, [user], (err, row) => {
 		if (err) {
 			db.close();
@@ -59,9 +60,43 @@ app.get("/api/getTinnies/:id", (req, res) => {
 
 // Drink tinnie route
 app.post("/api/drinkTinnie/", (req, res) => {
-	// Remove one tinnie for user
-	// TODO
-	console.log(req.body);
+	// Remove number of tinnies from the DB
+	// Opening DB connection
+	let db = new sqlite3.Database(
+		"MyTinnies.db",
+		sqlite3.OPEN_READWRITE,
+		(err) => {
+			if (err) {
+				res.status(500).json({ error: "Database Error" });
+			} else {
+				console.log("Connected to the SQlite database.");
+			}
+		}
+	);
+
+	// Query to get usre data from DB
+	let sql = `SELECT tinnies FROM tinnies WHERE user_ID=?`;
+
+	// Getting DB data and closing
+	db.get(sql, [USER], (err, row) => {
+		if (err) {
+			db.close();
+			res.status(400).json({ error: "Error getting user" });
+		} else if (row === undefined) {
+			db.close();
+			res.status(400).json({ error: "Error getting user" });
+		} else {
+			db.close();
+			if (row.tinnies >= req.body.drank) {
+				console.log(`Yeah mate we got ${row.tinnies}`);
+				console.log(dbHelpers.drinkTinnies(row.tinnies - req.body.drank));
+			} else {
+				console.log(`Nah mate we got ${req.body.drank}`);
+			}
+		}
+	});
+
+	console.log(req.body.drank);
 	res.send("Good");
 });
 
@@ -74,7 +109,39 @@ app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 /*
 ----------- HELPER FUNCTIONS START -----------
 */
-let todo;
+const dbHelpers = {
+	drinkTinnies: (newTinnies) => {
+		/*
+			@args newTinnies = the updated number of tinnies
+		*/
+		// Opening DB connection
+		let db = new sqlite3.Database(
+			"MyTinnies.db",
+			sqlite3.OPEN_READWRITE,
+			(err) => {
+				if (err) {
+					return false;
+				} else {
+					console.log("11Connected to the SQlite database.");
+				}
+			}
+		);
+
+		// Query to get usre data from DB
+		let sql = `UPDATE tinnies SET tinnies = ${newTinnies} WHERE user_id = ?`;
+
+		// Updating DB data and closing
+		db.run(sql, [USER], (err) => {
+			if (err) {
+				db.close();
+				return false;
+			} else {
+				db.close();
+				return true;
+			}
+		});
+	},
+};
 /*
 ----------- HELPER FUNCTIONS End -----------
 */

@@ -89,7 +89,12 @@ app.post("/api/drinkTinnie/", (req, res) => {
 			db.close();
 			if (row.tinnies >= req.body.drank) {
 				console.log(`Yeah mate we got ${row.tinnies}`);
-				console.log(dbHelpers.drinkTinnies(row.tinnies - req.body.drank));
+				// TODO: below isn't working correctly (always returns undefined)
+				// i think this is to do with the async-ness of the DB call -- consider a promise
+				dbHelpers
+					.drinkTinnies(row.tinnies - req.body.drank)
+					.then((res) => console.log(res))
+					.catch((e) => console.log(e));
 			} else {
 				console.log(`Nah mate we got ${req.body.drank}`);
 			}
@@ -114,31 +119,34 @@ const dbHelpers = {
 		/*
 			@args newTinnies = the updated number of tinnies
 		*/
-		// Opening DB connection
-		let db = new sqlite3.Database(
-			"MyTinnies.db",
-			sqlite3.OPEN_READWRITE,
-			(err) => {
-				if (err) {
-					return false;
-				} else {
-					console.log("11Connected to the SQlite database.");
+
+		return new Promise((res, rej) => {
+			// Opening DB connection
+			let db = new sqlite3.Database(
+				"MyTinnies.db",
+				sqlite3.OPEN_READWRITE,
+				(err) => {
+					if (err) {
+						rej(Error("Unable to open DB"));
+					} else {
+						console.log("11Connected to the SQlite database.");
+					}
 				}
-			}
-		);
+			);
 
-		// Query to get usre data from DB
-		let sql = `UPDATE tinnies SET tinnies = ${newTinnies} WHERE user_id = ?`;
+			// Query to get usre data from DB
+			let sql = `UPDATE tinnies SET tinnies = ${newTinnies} WHERE user_id = ?`;
 
-		// Updating DB data and closing
-		db.run(sql, [USER], (err) => {
-			if (err) {
-				db.close();
-				return false;
-			} else {
-				db.close();
-				return true;
-			}
+			// Updating DB data and closing
+			db.run(sql, [USER], (err) => {
+				if (err) {
+					db.close();
+					rej(Error("Unable to access user"));
+				} else {
+					db.close();
+					res(true);
+				}
+			});
 		});
 	},
 };

@@ -59,7 +59,7 @@ app.get("/api/getTinnies/:id", (req, res) => {
 });
 
 // Drink tinnie  - Removes the number of drank tinnies from the DB entry for user
-app.post("/api/drinkTinnie/", (req, res) => {
+app.post("/api/drinkTinnies/", (req, res) => {
 	// Opening DB connection
 	let db = new sqlite3.Database(
 		"MyTinnies.db",
@@ -73,10 +73,10 @@ app.post("/api/drinkTinnie/", (req, res) => {
 		}
 	);
 
-	// Query to get usre data from DB
+	// Query to get user data from DB
 	let sql = `SELECT tinnies FROM tinnies WHERE user_ID=?`;
 
-	// Getting DB data and closing
+	// Gettting DB data, performing update, and closing DB connection
 	db.get(sql, [USER], (err, row) => {
 		if (err) {
 			db.close();
@@ -88,7 +88,7 @@ app.post("/api/drinkTinnie/", (req, res) => {
 			db.close();
 			if (row.tinnies >= req.body.drank) {
 				dbHelpers
-					.drinkTinnies(row.tinnies - req.body.drank)
+					.updateTinnies(row.tinnies - req.body.drank)
 					.then((didUpdate) => {
 						if (didUpdate) {
 							res.json({ success: `User drank ${req.body.drank} tinnie(s)` });
@@ -110,8 +110,52 @@ app.post("/api/drinkTinnie/", (req, res) => {
 });
 
 // Add Tinnies - Adds to user's tinnies
-app.post("/api/addTinnie/", (req, res) => {
-	//
+app.post("/api/addTinnies/", (req, res) => {
+	// Opening DB connection
+	let db = new sqlite3.Database(
+		"MyTinnies.db",
+		sqlite3.OPEN_READWRITE,
+		(err) => {
+			if (err) {
+				res.status(500).json({ error: "Database Error" });
+			} else {
+				console.log("Connected to the SQlite database.");
+			}
+		}
+	);
+
+	// Query to get user data from DB
+	let sql = `SELECT tinnies FROM tinnies WHERE user_ID=?`;
+
+	// Gettting DB data, performing update, and closing DB connection
+	db.get(sql, [USER], (err, row) => {
+		if (err) {
+			db.close();
+			res.status(400).json({ error: "Error getting user" });
+		} else if (row === undefined) {
+			db.close();
+			res.status(400).json({ error: "Error getting user" });
+		} else {
+			db.close();
+			dbHelpers
+				.updateTinnies(row.tinnies + req.body.newTinnies)
+				.then((didUpdate) => {
+					if (didUpdate) {
+						res.json({
+							success: `User now has ${
+								row.tinnies + req.body.newTinnies
+							} tinnie(s)`,
+						});
+					} else {
+						res.status(500).json({ error: "Error updating user tinnies" });
+					}
+				})
+				.catch((e) => {
+					console.log(e);
+					res.status(500).json({ error: "Error updating user tinnies" });
+				});
+		}
+	});
 });
 
 // Getting port from env or setting to 5000
@@ -124,7 +168,7 @@ app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 ----------- HELPER FUNCTIONS START -----------
 */
 const dbHelpers = {
-	drinkTinnies: (newTinnies) => {
+	updateTinnies: (newTinnies) => {
 		/*
 			@args newTinnies = the updated number of tinnies for the current user
 			@returns a boolean promise with true if the update was successful or false if unsuccessful

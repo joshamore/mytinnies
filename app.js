@@ -18,7 +18,7 @@ app.get("/", (req, res) => {
 	res.send("<h1>My Tinnies</h1>");
 });
 
-// Get Tinnies route -- Returns current number of tinnies for a user
+// Get Tinnies route - Returns current number of tinnies for a user
 app.get("/api/getTinnies/:id", (req, res) => {
 	/*
         TODO: unsure how to handle ID auth at this point.
@@ -58,9 +58,8 @@ app.get("/api/getTinnies/:id", (req, res) => {
 	});
 });
 
-// Drink tinnie route
+// Drink tinnie  - Removes the number of drank tinnies from the DB entry for user
 app.post("/api/drinkTinnie/", (req, res) => {
-	// Remove number of tinnies from the DB
 	// Opening DB connection
 	let db = new sqlite3.Database(
 		"MyTinnies.db",

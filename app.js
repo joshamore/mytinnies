@@ -109,6 +109,11 @@ app.post("/api/drinkTinnie/", (req, res) => {
 	});
 });
 
+// Add Tinnies - Adds to user's tinnies
+app.post("/api/addTinnie/", (req, res) => {
+	//
+});
+
 // Getting port from env or setting to 5000
 const PORT = process.env.PORT || 5000;
 

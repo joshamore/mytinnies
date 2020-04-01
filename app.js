@@ -32,7 +32,7 @@ app.get("/api/getTinnies/:id", (req, res) => {
 		.getUserData(user)
 		.then((userData) => res.json(userData))
 		.catch((e) => {
-			res.status(400).json({ e });
+			res.status(400).json({ error: e.message });
 		});
 
 	// // Opening DB connection

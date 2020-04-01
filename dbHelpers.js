@@ -4,6 +4,43 @@ const sqlite3 = require("sqlite3").verbose();
 var USER = 23;
 
 module.exports = {
+	getUserData: (userID) => {
+		/*
+			@args userID = the user's ID
+			@returns a promise which will resolve as an object containing the user's ID and tinnnies count.
+		*/
+		return new Promise((res, rej) => {
+			// Opening DB connection
+			let db = new sqlite3.Database(
+				"MyTinnies.db",
+				sqlite3.OPEN_READWRITE,
+				(err) => {
+					if (err) {
+						rej(Error("Unable to open DB"));
+					} else {
+						console.log("Connected to the SQlite database.");
+					}
+				}
+			);
+
+			// Query to get user data from DB
+			let sql = `SELECT * FROM tinnies WHERE user_ID=?`;
+
+			// Getting DB data and closing
+			db.get(sql, [userID], (err, row) => {
+				if (err) {
+					db.close();
+					rej(Error("Unable to access user"));
+				} else if (row === undefined) {
+					db.close();
+					rej(Error("User does not exist"));
+				} else {
+					db.close();
+					res(row);
+				}
+			});
+		});
+	},
 	updateTinnies: (newTinnies) => {
 		/*
 			@args newTinnies = the updated number of tinnies for the current user

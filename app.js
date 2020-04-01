@@ -25,38 +25,45 @@ app.get("/api/getTinnies/:id", (req, res) => {
         TODO: unsure how to handle ID auth at this point.
         Probably won't be via an ID in the GET url outside of testing
     */
-	// Getting user from param
+	// Getting user ID from param
 	const user = parseInt(req.params.id);
 
-	// Opening DB connection
-	let db = new sqlite3.Database(
-		"MyTinnies.db",
-		sqlite3.OPEN_READWRITE,
-		(err) => {
-			if (err) {
-				res.status(500).json({ error: "Database Error" });
-			} else {
-				console.log("Connected to the SQlite database.");
-			}
-		}
-	);
+	dbHelpers
+		.getUserData(user)
+		.then((userData) => res.json(userData))
+		.catch((e) => {
+			res.status(400).json({ e });
+		});
 
-	// Query to get usre data from DB
-	let sql = `SELECT * FROM tinnies WHERE user_ID=?`;
+	// // Opening DB connection
+	// let db = new sqlite3.Database(
+	// 	"MyTinnies.db",
+	// 	sqlite3.OPEN_READWRITE,
+	// 	(err) => {
+	// 		if (err) {
+	// 			res.status(500).json({ error: "Database Error" });
+	// 		} else {
+	// 			console.log("Connected to the SQlite database.");
+	// 		}
+	// 	}
+	// );
 
-	// Getting DB data and closing
-	db.get(sql, [user], (err, row) => {
-		if (err) {
-			db.close();
-			res.status(400).json({ error: "Error getting user" });
-		} else if (row === undefined) {
-			db.close();
-			res.status(400).json({ error: "Error getting user" });
-		} else {
-			db.close();
-			res.json(row);
-		}
-	});
+	// // Query to get usre data from DB
+	// let sql = `SELECT * FROM tinnies WHERE user_ID=?`;
+
+	// // Getting DB data and closing
+	// db.get(sql, [user], (err, row) => {
+	// 	if (err) {
+	// 		db.close();
+	// 		res.status(400).json({ error: "Error getting user" });
+	// 	} else if (row === undefined) {
+	// 		db.close();
+	// 		res.status(400).json({ error: "Error getting user" });
+	// 	} else {
+	// 		db.close();
+	// 		res.json(row);
+	// 	}
+	// });
 });
 
 // Drink tinnie  - Removes the number of drank tinnies from the DB entry for user

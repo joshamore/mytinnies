@@ -66,39 +66,16 @@ app.post("/api/drinkTinnies/", (req, res) => {
 
 // Add Tinnies - Adds to user's tinnies
 app.post("/api/addTinnies/", (req, res) => {
-	// Opening DB connection
-	let db = new sqlite3.Database(
-		"MyTinnies.db",
-		sqlite3.OPEN_READWRITE,
-		(err) => {
-			if (err) {
-				res.status(500).json({ error: "Database Error" });
-			} else {
-				console.log("Connected to the SQlite database.");
-			}
-		}
-	);
-
-	// Query to get user data from DB
-	let sql = `SELECT tinnies FROM tinnies WHERE user_ID=?`;
-
-	// Gettting DB data, performing update, and closing DB connection
-	db.get(sql, [USER], (err, row) => {
-		if (err) {
-			db.close();
-			res.status(400).json({ error: "Error getting user" });
-		} else if (row === undefined) {
-			db.close();
-			res.status(400).json({ error: "Error getting user" });
-		} else {
-			db.close();
+	dbHelpers
+		.getUserData(USER)
+		.then((userData) => {
 			dbHelpers
-				.updateTinnies(row.tinnies + req.body.newTinnies)
+				.updateTinnies(userData.tinnies + req.body.newTinnies)
 				.then((didUpdate) => {
 					if (didUpdate) {
 						res.json({
 							success: `User now has ${
-								row.tinnies + req.body.newTinnies
+								userData.tinnies + req.body.newTinnies
 							} tinnie(s)`,
 						});
 					} else {
@@ -109,8 +86,10 @@ app.post("/api/addTinnies/", (req, res) => {
 					console.log(e);
 					res.status(500).json({ error: "Error updating user tinnies" });
 				});
-		}
-	});
+		})
+		.catch((e) => {
+			res.status(400).json({ error: e.message });
+		});
 });
 
 // Getting port from env or setting to 5000

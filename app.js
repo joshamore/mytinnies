@@ -1,6 +1,7 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const dbHelpers = require("./dbHelpers");
+const cors = require("cors");
 
 // TODO: Below is for dev only remove before deploying
 const sqlite3 = require("sqlite3").verbose();
@@ -13,6 +14,9 @@ const app = express();
 // Adding body parser middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
+
+// Adding CORS middleware
+app.use(cors());
 
 // Index route
 app.get("/", (req, res) => {

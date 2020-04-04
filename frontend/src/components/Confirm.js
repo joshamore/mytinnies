@@ -8,8 +8,19 @@ export class Confirm extends Component {
 	// Moves to next step on continue click
 	continue = (e) => {
 		e.preventDefault();
-		// PROCESS FORM. I.E SEND DATA TO API
-		this.props.nextStep();
+		/*
+            FETCH TEST WITH DUMMY ROUTE.
+            TODO: Update with a create route once it has been validated as working.
+        */
+		fetch("http://localhost:5000/api/getTinnies/23")
+			.then((data) => {
+				this.props.nextStep();
+			})
+			.catch((e) => console.log(e.message + " reeeee!"));
+		/*
+            END OF FETCH TEST
+        */
+		// this.props.nextStep();
 	};
 
 	// Moves to prev step on continue click

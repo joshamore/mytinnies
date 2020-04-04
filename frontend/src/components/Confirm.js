@@ -10,7 +10,7 @@ export class Confirm extends Component {
 		e.preventDefault();
 		/*
             FETCH TEST WITH DUMMY ROUTE.
-            TODO: Update with a create route once it has been validated as working.
+            TODO: Update to a create user route after this has been created.
         */
 		fetch("http://localhost:5000/api/getTinnies/23")
 			.then((data) => {

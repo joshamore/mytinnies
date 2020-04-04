@@ -10,12 +10,13 @@ export class UserForm extends Component {
 		firstName: "",
 		lastName: "",
 		email: "",
-		age: 0,
+		age: 18,
 	};
 
 	// Proceed to the next step
 	nextStep = () => {
 		const { step } = this.state;
+
 		this.setState({
 			step: step + 1,
 		});

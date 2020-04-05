@@ -8,6 +8,7 @@ export class UserForm extends Component {
 	state = {
 		step: 1,
 		firstName: "",
+		password: "",
 		lastName: "",
 		email: "",
 		age: 18,
@@ -39,9 +40,9 @@ export class UserForm extends Component {
 		// Destructures and creates a variable with current step
 		const { step } = this.state;
 		// Destructures and creates a variable with current entered data
-		const { firstName, lastName, email, age } = this.state;
+		const { firstName, lastName, email, age, password } = this.state;
 		// Destructures values into array to make passing into components easier
-		const values = { firstName, lastName, email, age };
+		const values = { firstName, lastName, email, age, password };
 
 		// Rendering component based on step
 		switch (step) {

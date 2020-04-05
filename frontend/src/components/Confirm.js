@@ -41,6 +41,7 @@ export class Confirm extends Component {
 						<ListItem primaryText="First Name" secondaryText={firstName} />
 						<ListItem primaryText="Last Name" secondaryText={lastName} />
 						<ListItem primaryText="Email" secondaryText={email} />
+						<ListItem primaryText="Password" secondaryText="🙊" />
 						<ListItem primaryText="Age" secondaryText={age} />
 					</List>
 					<br />

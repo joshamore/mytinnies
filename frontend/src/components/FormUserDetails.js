@@ -38,6 +38,14 @@ export class FormUserDetails extends Component {
 						defaultValue={values.email}
 					/>
 					<br />
+					<TextField
+						hintText="Enter a new password"
+						foatingLabelText="password"
+						type="password"
+						onChange={handleChange("password")}
+						defaultValue={values.password}
+					/>
+					<br />
 					<RaisedButton
 						label="Continue"
 						primary={true}

@@ -43,6 +43,7 @@ app.post("/api/drinkTinnies/", (req, res) => {
 	dbHelpers
 		.getUserData(USER)
 		.then((userData) => {
+			console.log(typeof req.body.drank);
 			if (userData.tinnies >= req.body.drank) {
 				dbHelpers
 					.updateTinnies(userData.tinnies - req.body.drank)

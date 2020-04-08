@@ -2,6 +2,7 @@ const express = require("express");
 const bodyParser = require("body-parser");
 const dbHelpers = require("./dbHelpers");
 const cors = require("cors");
+const bcrypt = require("bcryptjs");
 
 // TODO: Below is for dev only remove before deploying
 const sqlite3 = require("sqlite3").verbose();
@@ -102,3 +103,49 @@ const PORT = process.env.PORT || 5000;
 
 // Starting server
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
+/*******************
+ * TESTING BCRYPT
+ *******************/
+// takes plaintext and returns encrypted hash
+const bcryptHashTest = (plaintext) => {
+	return new Promise((res, rej) => {
+		// outer function generates salt
+		bcrypt.genSalt(10, (err, salt) => {
+			// checking if error
+			if (err) {
+				rej(Error("unable to salt"));
+			}
+			// Uses generated salt to hash provided plaintext
+			bcrypt.hash(plaintext, salt, (err, hash) => {
+				if (err) {
+					rej(Error("unable to hash"));
+				} else {
+					res(hash);
+				}
+			});
+		});
+	});
+};
+
+// Compares a hashed string to a plaintext string
+const bcryptCompreTest = (plaintext, hash) => {
+	return new Promise((res, rej) => {
+		bcrypt
+			.compare(plaintext, hash)
+			.then((isMatch) => {
+				res(isMatch);
+			})
+			.catch((e) => rej(Error(e)));
+	});
+};
+
+// Testing above two functions
+const plain = "reeeeeeeeeee";
+bcryptHashTest(plain)
+	.then((res) => {
+		bcryptCompreTest(plain, res)
+			.then((isMatch) => console.log(isMatch))
+			.catch((e) => console.log("cunt"));
+	})
+	.catch((e) => console.log(e));

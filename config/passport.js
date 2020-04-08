@@ -1,11 +1,11 @@
 const sqlite3 = require("sqlite3").verbose();
 const LocalStrategy = require("passport-local").Strategy;
-const userHelpers = require("./helpers/userHelpers");
+const userHelpers = require("../helpers/userHelpers");
 
 // Opening DB connection
 let db = new sqlite3.Database(
-	"../MyTinnies.db",
-	sqlite3.OPEN_READONLY,
+	"./MyTinnies.db",
+	sqlite3.OPEN_READWRITE,
 	(err) => {
 		if (err) {
 			throw err;

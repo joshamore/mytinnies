@@ -12,7 +12,7 @@ module.exports = {
 		return new Promise((res, rej) => {
 			// Opening DB connection
 			let db = new sqlite3.Database(
-				"MyTinnies.db",
+				"./MyTinnies.db",
 				sqlite3.OPEN_READWRITE,
 				(err) => {
 					if (err) {
@@ -49,7 +49,7 @@ module.exports = {
 		return new Promise((res, rej) => {
 			// Opening DB connection
 			let db = new sqlite3.Database(
-				"MyTinnies.db",
+				"./MyTinnies.db",
 				sqlite3.OPEN_READWRITE,
 				(err) => {
 					if (err) {

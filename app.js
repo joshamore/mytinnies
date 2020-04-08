@@ -1,7 +1,11 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const dbHelpers = require("./helpers/dbHelpers");
+const passport = require("passport");
 const cors = require("cors");
+
+// Passport Config
+require("./config/passport")(passport);
 
 /*
 	NOTE RE testing DB: 
@@ -23,6 +27,10 @@ app.use(bodyParser.json());
 
 // Adding CORS middleware
 app.use(cors());
+
+// Passport middleware
+app.use(passport.initialize());
+app.use(passport.session());
 
 // Index route
 app.get("/", (req, res) => {

@@ -1,6 +1,11 @@
 const LocalStrategy = require("passport-local").Strategy;
-const bcrypt = require("bcryptjs");
+const userHelpers = require("./helpers/userHelpers");
 
+/*
+    Guide for SQLITE setup: https://stackoverflow.com/questions/23481817/node-js-passport-autentification-with-sqlite
+*/
+
+// Will need to
 USER = {
 	email: "bob@example.com",
 	password_plain:
@@ -16,19 +21,6 @@ module.exports = function (passport) {
 			if (email !== USER.email) {
 				return done(null, false, { message: "User email does not exist" });
 			}
-
-			// Matching password -- first arg is plaintext password and second is encrypted
-			bcrypt.compare(password, USER.password_hash, (err, isMatch) => {
-				// Throws error if an error exists.
-				if (err) throw err;
-
-				// isMatch is a boolean -- true if matches or false if not
-				if (isMatch) {
-					return done(null, user);
-				} else {
-					return done(null, false, { message: "Password invalid" });
-				}
-			});
 		})
 	);
 };

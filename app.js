@@ -1,8 +1,13 @@
 const express = require("express");
 const bodyParser = require("body-parser");
 const dbHelpers = require("./helpers/dbHelpers");
-const userHelpers = require("./helpers/userHelpers");
 const cors = require("cors");
+
+/*
+	NOTE RE testing DB: 
+		- User ID 1 has a plaintext password of: "reeeeeeeeeee"
+		- User ID 2 has a plaintext password of: "cool stuff"
+*/
 
 // TODO: Below is for dev only remove before deploying
 const sqlite3 = require("sqlite3").verbose();

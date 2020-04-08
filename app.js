@@ -1,6 +1,6 @@
 const express = require("express");
 const bodyParser = require("body-parser");
-const dbHelpers = require("./dbHelpers");
+const dbHelpers = require("./helpers/dbHelpers");
 const cors = require("cors");
 const bcrypt = require("bcryptjs");
 

@@ -18,33 +18,20 @@ let db = new sqlite3.Database(
 module.exports = function (passport) {
 	passport.use(
 		new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
-			console.log("in local strat");
-
 			// Checking if user's email exists in DB.
 			db.get("SELECT * FROM users WHERE email = ?", email, (err, row) => {
 				if (!row) {
-					console.log("bad email");
 					return done(null, false, { message: "User email not found" });
 				} else {
-					// Checking if password hash matches
+					// Checking if password matches
 					userHelpers
-						.passwordHash(password)
-						.then((res, rej) => {
-							console.log(res);
-							db.get(
-								"SELECT email, user_id FROM users WHERE email = ? AND password_hash = ?",
-								email,
-								res,
-								(err, row) => {
-									if (err) throw err;
-
-									if (!row) {
-										return done(null, false, { message: "Password incorrect" });
-									} else {
-										return done(null, row);
-									}
-								}
-							);
+						.passwordHashCompare(password, row.password_hash)
+						.then((isMatch) => {
+							if (!isMatch) {
+								return done(null, false, { message: "Password incorrect" });
+							} else {
+								return done(null, { email: row.email, user_id: row.user_id });
+							}
 						})
 						.catch((err) => {
 							throw err;
@@ -55,7 +42,6 @@ module.exports = function (passport) {
 	);
 
 	passport.serializeUser((user, done) => {
-		console.log("serialize worked");
 		return done(null, user.user_id);
 	});
 

@@ -1,5 +1,10 @@
+if (process.env.NODE_ENV !== "production") {
+	require("dotenv").config();
+}
+
 const express = require("express");
 const bodyParser = require("body-parser");
+const session = require("express-session");
 const dbHelpers = require("./helpers/dbHelpers");
 const passport = require("passport");
 const cors = require("cors");
@@ -28,6 +33,15 @@ app.use(bodyParser.json());
 // Adding CORS middleware
 app.use(cors());
 
+// Adding express session middleware
+app.use(
+	session({
+		secret: process.env.SESSION_SECRET,
+		resave: false,
+		saveUninitialized: false,
+	})
+);
+
 // Passport middleware
 app.use(passport.initialize());
 app.use(passport.session());
@@ -37,15 +51,19 @@ app.get("/", (req, res) => {
 	res.send("<h1>My Tinnies</h1>");
 });
 
+// Success test route
+app.get("/in", (req, res) => {
+	res.send("yeah all good mate");
+});
+
 // Login route
 // TODO: test
-app.post(
-	"/login",
-	passport.authenticate("local", { failureRedirect: "/login" }),
-	(req, res) => {
-		res.send("Yas");
-	}
-);
+app.post("/login", (req, res, next) => {
+	passport.authenticate("local", {
+		successRedirect: "/in",
+		failureRedirect: "/fail",
+	})(req, res, next);
+});
 
 // Get Tinnies route - Returns current number of tinnies for a user
 app.get("/api/getTinnies/:id", (req, res) => {

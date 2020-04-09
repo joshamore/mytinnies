@@ -17,16 +17,20 @@ let db = new sqlite3.Database(
 
 module.exports = function (passport) {
 	passport.use(
-		new LocalStrategy((email, password, done) => {
+		new LocalStrategy({ usernameField: "email" }, (email, password, done) => {
+			console.log("in local strat");
+
 			// Checking if user's email exists in DB.
 			db.get("SELECT * FROM users WHERE email = ?", email, (err, row) => {
 				if (!row) {
+					console.log("bad email");
 					return done(null, false, { message: "User email not found" });
 				} else {
 					// Checking if password hash matches
 					userHelpers
 						.passwordHash(password)
 						.then((res, rej) => {
+							console.log(res);
 							db.get(
 								"SELECT email, user_id FROM users WHERE email = ? AND password_hash = ?",
 								email,
@@ -50,11 +54,12 @@ module.exports = function (passport) {
 		})
 	);
 
-	passport.serializeUser(function (user, done) {
+	passport.serializeUser((user, done) => {
+		console.log("serialize worked");
 		return done(null, user.user_id);
 	});
 
-	passport.deserializeUser(function (id, done) {
+	passport.deserializeUser((id, done) => {
 		db.get(
 			"SELECT user_id, email FROM users WHERE user_id = ?",
 			id,

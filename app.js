@@ -37,10 +37,15 @@ app.get("/", (req, res) => {
 	res.send("<h1>My Tinnies</h1>");
 });
 
-// Login Route
-app.post("/login", (req, res) => {
-	//TODO
-});
+// Login route
+// TODO: test
+app.post(
+	"/login",
+	passport.authenticate("local", { failureRedirect: "/login" }),
+	(req, res) => {
+		res.send("Yas");
+	}
+);
 
 // Get Tinnies route - Returns current number of tinnies for a user
 app.get("/api/getTinnies/:id", (req, res) => {

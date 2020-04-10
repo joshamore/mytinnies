@@ -4,7 +4,7 @@ const sqlite3 = require("sqlite3").verbose();
 var USER = 2;
 
 module.exports = {
-	getUserData: (userID) => {
+	getUserTinniesData: (userID) => {
 		/*
 			@args userID = the user's ID
 			@returns a promise which will resolve as an object containing the user's ID and tinnnies count.

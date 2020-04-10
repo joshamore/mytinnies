@@ -10,21 +10,21 @@ var USER = 2;
 router.get("/getTinnies/", ensureAuthenticated, (req, res) => {
 	// Getting user data and resolving.
 	dbHelpers
-		.getUserData(req.user.user_id)
+		.getUserTinniesData(req.user.user_id)
 		.then((userData) => res.json(userData))
 		.catch((e) => {
 			res.status(400).json({ error: e.message });
 		});
 });
 
-// Drink tinnie  - Removes the number of drank tinnies from the DB entry for user
-router.post("/drinkTinnies/", (req, res) => {
+// Drink tinnies route
+router.post("/drinkTinnies/", ensureAuthenticated, (req, res) => {
 	if (typeof req.body.drank !== typeof 1) {
 		res.status(400).json({ error: "Drank must be a number" });
 	}
 
 	dbHelpers
-		.getUserData(USER)
+		.getUserTinniesData(req.user.user_id)
 		.then((userData) => {
 			if (userData.tinnies >= req.body.drank) {
 				dbHelpers
@@ -54,7 +54,7 @@ router.post("/drinkTinnies/", (req, res) => {
 // Add Tinnies - Adds to user's tinnies
 router.post("/addTinnies/", (req, res) => {
 	dbHelpers
-		.getUserData(USER)
+		.getUserTinniesData(USER)
 		.then((userData) => {
 			dbHelpers
 				.updateTinnies(userData.tinnies + req.body.newTinnies)

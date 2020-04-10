@@ -8,6 +8,7 @@ const session = require("express-session");
 const dbHelpers = require("./helpers/dbHelpers");
 const passport = require("passport");
 const cors = require("cors");
+const { ensureAuthenticated } = require("./config/auth");
 
 // Passport Config
 require("./config/passport")(passport);
@@ -58,13 +59,28 @@ app.get("/in", (req, res) => {
 	res.send("yeah all good mate");
 });
 
+// Auth test route
+app.get("/auth", ensureAuthenticated, (req, res) => {
+	res.send("AUTH YEAH");
+});
+
 // Login route
-// TODO: test
 app.post("/login", (req, res, next) => {
 	passport.authenticate("local", {
 		successRedirect: "/in",
 		failureRedirect: "/fail",
 	})(req, res, next);
+});
+
+// Logout Handle Route
+app.post("/logout", (req, res) => {
+	req.logout();
+	res.redirect("/out");
+});
+
+// Logout test route
+app.get("/out", (req, res) => {
+	res.send("yeah mate, just left the pub");
 });
 
 // Get Tinnies route - Returns current number of tinnies for a user

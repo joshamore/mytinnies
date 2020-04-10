@@ -37,7 +37,7 @@ router.post("/drinkTinnies/", ensureAuthenticated, (req, res) => {
 		.then((userData) => {
 			if (userData.tinnies >= req.body.drank) {
 				dbHelpers
-					.updateTinnies(userData.tinnies - req.body.drank)
+					.updateTinnies(userData.tinnies - req.body.drank, req.user.user_id)
 					.then((didUpdate) => {
 						if (didUpdate) {
 							res.json({ success: `User drank ${req.body.drank} tinnie(s)` });
@@ -72,7 +72,7 @@ router.post("/addTinnies/", ensureAuthenticated, (req, res) => {
 		.getUserTinniesData(req.user.user_id)
 		.then((userData) => {
 			dbHelpers
-				.updateTinnies(userData.tinnies + req.body.newTinnies)
+				.updateTinnies(userData.tinnies + req.body.newTinnies, req.user.user_id)
 				.then((didUpdate) => {
 					if (didUpdate) {
 						res.json({

@@ -1,8 +1,5 @@
 const sqlite3 = require("sqlite3").verbose();
 
-// TODO: This var is used for testing purpose -- delete
-var USER = 2;
-
 module.exports = {
 	getUserTinniesData: (userID) => {
 		/*
@@ -41,7 +38,7 @@ module.exports = {
 			});
 		});
 	},
-	updateTinnies: (newTinnies) => {
+	updateTinnies: (newTinnies, user) => {
 		/*
 			@args newTinnies = the updated number of tinnies for the current user
 			@returns a boolean promise with true if the update was successful or false if unsuccessful
@@ -64,7 +61,7 @@ module.exports = {
 			let sql = `UPDATE tinnies SET tinnies = ${newTinnies} WHERE user_id = ?`;
 
 			// Updating DB data and closing
-			db.run(sql, [USER], (err) => {
+			db.run(sql, [user], (err) => {
 				if (err) {
 					db.close();
 					rej(Error("Unable to access user"));

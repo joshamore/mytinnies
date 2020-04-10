@@ -48,7 +48,9 @@ app.use(passport.session());
 
 // Index route
 app.get("/", (req, res) => {
-	res.send("<h1>My Tinnies</h1>");
+	// Testing that session is initialised and working.
+	req.session.views = req.session.views + 1;
+	res.send(`<h1>My Tinnies</h1> ${req.session.views}`);
 });
 
 // Success test route

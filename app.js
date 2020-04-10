@@ -54,6 +54,9 @@ app.get("/", (req, res) => {
 	res.send(`<h1>My Tinnies</h1> ${req.session.views}`);
 });
 
+// Routes
+app.use("/users", require("./routes/users"));
+
 // Success test route
 app.get("/in", (req, res) => {
 	res.send("yeah all good mate");
@@ -70,17 +73,6 @@ app.post("/login", (req, res, next) => {
 		successRedirect: "/in",
 		failureRedirect: "/fail",
 	})(req, res, next);
-});
-
-// Logout Handle Route
-app.post("/logout", (req, res) => {
-	req.logout();
-	res.redirect("/out");
-});
-
-// Logout test route
-app.get("/out", (req, res) => {
-	res.send("yeah mate, just left the pub");
 });
 
 // Get Tinnies route - Returns current number of tinnies for a user

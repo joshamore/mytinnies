@@ -1,7 +1,7 @@
 const sqlite3 = require("sqlite3").verbose();
 
 // TODO: This var is used for testing purpose -- delete
-var USER = 23;
+var USER = 2;
 
 module.exports = {
 	getUserData: (userID) => {

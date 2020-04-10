@@ -19,6 +19,11 @@ router.get("/getTinnies/", ensureAuthenticated, (req, res) => {
 
 // Drink tinnies route
 router.post("/drinkTinnies/", ensureAuthenticated, (req, res) => {
+	/*
+        Explain: Subtracts a provided number of tinnies from the authenticated user's Tinnies table.
+        @args drank = A JSON object field with the number of tinnies to be drank. Must be equal to or less than the
+        current total of Tinnies for the user.
+    */
 	if (typeof req.body.drank !== typeof 1) {
 		res.status(400).json({ error: "Drank must be a number" });
 	}

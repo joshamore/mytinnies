@@ -24,7 +24,7 @@ const sqlite3 = require("sqlite3").verbose();
 // TODO: This var is used for testing purpose -- delete
 var USER = 23;
 
-// Creates express server
+// Create express server
 const app = express();
 
 // Adding body parser middleware
@@ -56,24 +56,6 @@ app.get("/", (req, res) => {
 
 // Routes
 app.use("/users", require("./routes/users"));
-
-// Success test route
-app.get("/in", (req, res) => {
-	res.send("yeah all good mate");
-});
-
-// Auth test route
-app.get("/auth", ensureAuthenticated, (req, res) => {
-	res.send("AUTH YEAH");
-});
-
-// Login route
-app.post("/login", (req, res, next) => {
-	passport.authenticate("local", {
-		successRedirect: "/in",
-		failureRedirect: "/fail",
-	})(req, res, next);
-});
 
 // Get Tinnies route - Returns current number of tinnies for a user
 app.get("/api/getTinnies/:id", (req, res) => {

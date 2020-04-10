@@ -3,9 +3,6 @@ const router = express.Router();
 const dbHelpers = require("../helpers/dbHelpers");
 const { ensureAuthenticated } = require("../config/auth");
 
-// TODO: This var is used for testing purpose -- delete
-var USER = 2;
-
 // Get Tinnies route
 router.get("/getTinnies/", ensureAuthenticated, (req, res) => {
 	/*

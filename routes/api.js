@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const dbHelpers = require("../helpers/dbHelpers");
+const { ensureAuthenticated } = require("../config/auth");
 
 // TODO: This var is used for testing purpose -- delete
 var USER = 2;

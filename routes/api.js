@@ -6,15 +6,11 @@ const { ensureAuthenticated } = require("../config/auth");
 // TODO: This var is used for testing purpose -- delete
 var USER = 2;
 
-// Get Tinnies route - Returns current number of tinnies for a user
-router.get("/getTinnies/:id", (req, res) => {
-	/*
-        TODO: unsure how to handle ID auth at this point.
-        Probably won't be via an ID in the GET url outside of testing
-    */
+// Get Tinnies route
+router.get("/getTinnies/", ensureAuthenticated, (req, res) => {
 	// Getting user data and resolving.
 	dbHelpers
-		.getUserData(parseInt(req.params.id))
+		.getUserData(req.user.user_id)
 		.then((userData) => res.json(userData))
 		.catch((e) => {
 			res.status(400).json({ error: e.message });

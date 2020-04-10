@@ -8,6 +8,11 @@ var USER = 2;
 
 // Get Tinnies route
 router.get("/getTinnies/", ensureAuthenticated, (req, res) => {
+	/*
+        Get the tinnies count for the current authenticated user.
+
+        @retuns a JSON object containing the user ID and the tinnies count.
+    */
 	// Getting user data and resolving.
 	dbHelpers
 		.getUserTinniesData(req.user.user_id)
@@ -20,9 +25,11 @@ router.get("/getTinnies/", ensureAuthenticated, (req, res) => {
 // Drink tinnies route
 router.post("/drinkTinnies/", ensureAuthenticated, (req, res) => {
 	/*
-        Explain: Subtracts a provided number of tinnies from the authenticated user's Tinnies table.
+        Subtracts a provided number of tinnies from the authenticated user's Tinnies table.
+
         @args drank = A JSON object field with the number of tinnies to be drank. Must be equal to or less than the
         current total of Tinnies for the user.
+        @retuns a success JSON object with the updated tinnies count for the user.
     */
 	if (typeof req.body.drank !== typeof 1) {
 		res.status(400).json({ error: "Drank must be a number" });
@@ -56,10 +63,16 @@ router.post("/drinkTinnies/", ensureAuthenticated, (req, res) => {
 		});
 });
 
-// Add Tinnies - Adds to user's tinnies
-router.post("/addTinnies/", (req, res) => {
+// Add Tinnies route
+router.post("/addTinnies/", ensureAuthenticated, (req, res) => {
+	/*
+        Adds a provided number of tinnies to the authenticated user's Tinnies table.
+
+        @args newTinnies = A JSON object field with the number of tinnies to be added.
+        @retuns a success JSON object with the updated tinnies count for the user.
+    */
 	dbHelpers
-		.getUserTinniesData(USER)
+		.getUserTinniesData(req.user.user_id)
 		.then((userData) => {
 			dbHelpers
 				.updateTinnies(userData.tinnies + req.body.newTinnies)

@@ -3,6 +3,12 @@ const router = express.Router();
 const passport = require("passport");
 const { ensureAuthenticated } = require("../config/auth");
 
+// Create user handle
+router.post("/register", (req, res) => {
+	// Storing email and password from request body
+	const { email, password } = req.body;
+});
+
 // Login handle
 router.post("/login", (req, res, next) => {
 	passport.authenticate("local", {

@@ -12,29 +12,30 @@ router.post("/register", (req, res) => {
 	// Storing email and password from request body
 	const { firstName, lastName, email, password } = req.body;
 
-	// TESTING
-	userHelpers.createNewUser(firstName, lastName, email, password);
-	res.send("YO");
-	// OLD STUFF -- might be helpful
 	// Confirming if user already exists
-	// userHelpers
-	// 	.checkUserExistsByEmail(email)
-	// 	.then((confirm) => {
-	// 		// If user already exists, respond with error
-	// 		if (confirm) {
-	// 			res.send({ error: "Email address already registered" });
-	// 		} else {
-	// 			console.log("in else");
-	// 			dbHelpers
-	// 				.createNewUser(firstName, lastName, email, password)
-	// 				.then((didHappen = console.log(didHappen)))
-	// 				.catch((e) => {
-	// 					console.log(`error comrade ${e}`);
-	// 					res.send(e);
-	// 				});
-	// 		}
-	// 	})
-	// 	.catch((err) => res.send(err));
+	userHelpers
+		.checkUserExistsByEmail(email)
+		.then((confirm) => {
+			// If user already exists, respond with error
+			if (confirm) {
+				throw Error("Email address already registered");
+			} else {
+				// Creating new user
+				userHelpers
+					.createNewUser(firstName, lastName, email, password)
+					.then((newUser) =>
+						// TODO: This is a placeholder -- will need a different success response/process when
+						// frontend exists.
+						res.send({
+							success: `New user created with ID ${newUser}`,
+						})
+					)
+					.catch((err) => {
+						throw Error(err);
+					});
+			}
+		})
+		.catch((err) => res.send({ error: err.message }));
 });
 
 // Login handle

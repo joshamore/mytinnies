@@ -59,14 +59,26 @@ module.exports = {
 		});
 	},
 	createNewUser: async function (firstName, lastName, email, password) {
-		const hashedPassword = await this.passwordHash(password);
-		const newUser = await dbHelpers.createNewUserRecord(
-			firstName,
-			lastName,
-			email,
-			hashedPassword
-		);
+		try {
+			// Hashing password
+			const hashedPassword = await this.passwordHash(password);
+			// Creating new user record
+			const newUser = await dbHelpers.createNewUserRecord(
+				firstName,
+				lastName,
+				email,
+				hashedPassword
+			);
+			// Creating new tinnies table record
+			const newTinniesRecord = await dbHelpers.createUserTinniesRecord(
+				newUser,
+				0
+			);
 
-		//TODO
+			// returning new user's ID
+			return newUser;
+		} catch (err) {
+			throw Error(err);
+		}
 	},
 };

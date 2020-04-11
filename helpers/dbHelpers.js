@@ -39,6 +39,43 @@ module.exports = {
 			});
 		});
 	},
+	createUserTinniesRecord: (userID, tinnies) => {
+		/*
+			@args userID = the new user's ID
+			@args tinnies = the number of tinnies for new user
+			@returns a promise which will resolve with the tinnies record ID
+		*/
+		return new Promise((res, rej) => {
+			// Opening DB connection
+			let db = new sqlite3.Database(
+				"./MyTinnies.db",
+				sqlite3.OPEN_READWRITE,
+				(err) => {
+					if (err) {
+						rej(Error("Unable to open DB"));
+					} else {
+						console.log("Connected to the SQlite database.");
+					}
+				}
+			);
+
+			// Query to create tinnies record
+			let sql = 'INSERT INTO tinnies ("user_id", "tinnies") VALUES (?, ?)';
+
+			// Updating DB data and closing
+			db.run(sql, [userID, tinnies], function (err) {
+				if (err) {
+					db.close();
+					rej(
+						Error("Unable to create tinnies record (probably exists already)")
+					);
+				} else {
+					db.close();
+					res(this.lastID);
+				}
+			});
+		});
+	},
 	getUserTinniesData: (userID) => {
 		/*
 			@args userID = the user's ID

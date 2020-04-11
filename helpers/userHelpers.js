@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs");
+const dbHelpers = require("./dbHelpers");
 
 module.exports = {
 	passwordHash: (plaintext) => {
@@ -38,5 +39,8 @@ module.exports = {
 				})
 				.catch((e) => rej(Error(e)));
 		});
+	},
+	createNewUser: (email, password) => {
+		//TODO
 	},
 };

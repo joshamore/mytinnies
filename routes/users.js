@@ -50,8 +50,14 @@ router.get("/login", (req, res) => {
 
 // Logout handle
 router.post("/logout", (req, res) => {
-	req.logout();
-	res.redirect("/users/logout");
+	// If user is currently logged in, logs them out
+	if (req.isAuthenticated()) {
+		req.logout();
+		res.redirect("/users/logout");
+	} else {
+		// Redirects user to homepage if they're not logged in
+		res.redirect("/");
+	}
 });
 
 // Logout route

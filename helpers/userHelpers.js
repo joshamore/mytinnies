@@ -1,4 +1,5 @@
 const bcrypt = require("bcryptjs");
+const dbHelpers = require("./dbHelpers");
 
 module.exports = {
 	passwordHash: (plaintext) => {
@@ -38,5 +39,46 @@ module.exports = {
 				})
 				.catch((e) => rej(Error(e)));
 		});
+	},
+	checkUserExistsByEmail: (email) => {
+		/*
+            @args email = the user email to confirm if it's in use
+            @retrns a promise that will resolve with a bool true if user exists or false if not
+        */
+		return new Promise((res, rej) => {
+			dbHelpers
+				.getUserFromEmail(email)
+				.then((user_res) => {
+					if (user_res.userNotFound) {
+						res(false);
+					} else {
+						res(true);
+					}
+				})
+				.catch((err) => rej(Error(err)));
+		});
+	},
+	createNewUser: async function (firstName, lastName, email, password) {
+		try {
+			// Hashing password
+			const hashedPassword = await this.passwordHash(password);
+			// Creating new user record
+			const newUser = await dbHelpers.createNewUserRecord(
+				firstName,
+				lastName,
+				email,
+				hashedPassword
+			);
+			// Creating new tinnies table record
+			const newTinniesRecord = await dbHelpers.createUserTinniesRecord(
+				newUser,
+				0
+			);
+
+			// returning new user's ID
+			return newUser;
+		} catch (err) {
+			throw Error(err);
+		}
 	},
 };

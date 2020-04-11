@@ -59,6 +59,13 @@ module.exports = {
 		});
 	},
 	createNewUser: async function (firstName, lastName, email, password) {
+		/*
+			@args firstName = the new user's first name
+			@args lastName = the new user's last name
+			@args email = the new user's email address
+			@args password = the new user's password in plaintext
+            @retrns a promise that will resolve with the new user's ID
+        */
 		try {
 			// Hashing password
 			const hashedPassword = await this.passwordHash(password);

@@ -40,7 +40,33 @@ module.exports = {
 				.catch((e) => rej(Error(e)));
 		});
 	},
-	createNewUser: (email, password) => {
+	checkUserExistsByEmail: (email) => {
+		/*
+            @args email = the user email to confirm if it's in use
+            @retrns a promise that will resolve with a bool true if user exists or false if not
+        */
+		return new Promise((res, rej) => {
+			dbHelpers
+				.getUserFromEmail(email)
+				.then((user_res) => {
+					if (user_res.userNotFound) {
+						res(false);
+					} else {
+						res(true);
+					}
+				})
+				.catch((err) => rej(Error(err)));
+		});
+	},
+	createNewUser: async function (firstName, lastName, email, password) {
+		const hashedPassword = await this.passwordHash(password);
+		const newUser = await dbHelpers.createNewUserRecord(
+			firstName,
+			lastName,
+			email,
+			hashedPassword
+		);
+
 		//TODO
 	},
 };

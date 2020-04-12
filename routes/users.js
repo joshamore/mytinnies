@@ -28,7 +28,7 @@ router.post("/register", (req, res) => {
 						})
 					)
 					.catch((err) => {
-						throw Error(err);
+						res.send({ error: err.message });
 					});
 			}
 		})

@@ -4,7 +4,7 @@ const passport = require("passport");
 const { ensureAuthenticated } = require("../config/auth");
 const userHelpers = require("../helpers/userHelpers");
 
-// Create user handle
+// Register user handle
 router.post("/register", (req, res) => {
 	// Storing email and password from request body
 	const { firstName, lastName, email, password } = req.body;

@@ -7,19 +7,37 @@ import RaisedButton from "material-ui/RaisedButton";
 export class Confirm extends Component {
 	// Moves to next step on continue click
 	continue = (e) => {
+		// Prevents default form trigger
 		e.preventDefault();
-		/*
-            FETCH TEST WITH DUMMY ROUTE.
-            TODO: Update to a create user route after this has been created.
-        */
-		fetch("http://localhost:5000/api/getTinnies/23")
-			.then((data) => {
+		const {
+			values: { firstName, lastName, email, password },
+		} = this.props;
+
+		// Sending fetch request to register route
+		fetch("http://localhost:5000/users/register/", {
+			method: "POST",
+			body: JSON.stringify({
+				firstName: firstName,
+				lastName: lastName,
+				email: email,
+				password: password,
+			}),
+			headers: {
+				"Content-Type": "application/json",
+			},
+		})
+			.then((dataProm) => {
+				dataProm
+					.json()
+					.then((data) => console.log(data))
+					.catch((e) => {
+						throw e;
+					});
+
 				this.props.nextStep();
 			})
 			.catch((e) => console.log(e.message + " reeeee!"));
-		/*
-            END OF FETCH TEST
-        */
+
 		// this.props.nextStep();
 	};
 

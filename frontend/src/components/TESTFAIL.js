@@ -7,7 +7,8 @@ export class TESTFAIL extends Component {
 		return (
 			<MuiThemeProvider>
 				<React.Fragment>
-					<AppBar title="FAIL" />
+					<AppBar title="FAIL 😞" />
+					<h1> Failed to do what you attmempted. Better luck next time!</h1>
 				</React.Fragment>
 			</MuiThemeProvider>
 		);

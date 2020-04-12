@@ -20,6 +20,7 @@ export class Login extends Component {
 		e.preventDefault();
 
 		// Setting form data to a URLSearchParams object
+		// Why is this a searchparam? Answer: https://github.com/github/fetch/issues/263
 		const searchParamsForm = new URLSearchParams();
 		searchParamsForm.set("email", this.state.email);
 		searchParamsForm.set("password", this.state.password);

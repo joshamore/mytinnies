@@ -29,7 +29,10 @@ export class Confirm extends Component {
 			.then((dataProm) => {
 				dataProm
 					.json()
-					.then((data) => console.log(data))
+					.then((data) => {
+						// Printing success message to console.
+						console.log(data);
+					})
 					.catch((e) => {
 						throw e;
 					});

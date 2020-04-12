@@ -1,12 +1,19 @@
 import React from "react";
 import "./App.css";
-import UserForm from "./components/RegisterUserForm";
+import { BrowserRouter as Router, Switch, Route } from "react-router-dom";
+import RegisterUserForm from "./components/RegisterUserForm";
+import Index from "./components/Index";
 
 function App() {
 	return (
-		<div className="App">
-			<UserForm />
-		</div>
+		<Router>
+			<div className="App">
+				<Switch>
+					<Route path="/" exact component={Index} />
+					<Route path="/register" exact component={RegisterUserForm} />
+				</Switch>
+			</div>
+		</Router>
 	);
 }
 

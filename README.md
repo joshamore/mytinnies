@@ -1,7 +1,5 @@
 # Tinnies
 
-**Development note:** Pausing this version (with React) to work on a simpler non-React frontend so I can get a functional prototype. I will return to the react version in the future.
-
 A helpful tool to track ya tinnies.
 
 ## Pain point

@@ -10,7 +10,10 @@ router.get("/", (req, res) => {
 
 // Dashboard route
 router.get("/dashboard", ensureAuthenticated, (req, res) => {
-	res.render("dashboard");
+	// This passes is the user's email as a variable to EJS
+	res.render("dashboard", {
+		email: req.user.email,
+	});
 });
 
 module.exports = router;

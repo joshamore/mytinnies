@@ -4,8 +4,12 @@ const passport = require("passport");
 
 // Index route
 router.get("/", (req, res) => {
-	// TODO: update
 	res.render("welcome");
+});
+
+// Dashboard route
+router.get("/dashboard", (req, res) => {
+	res.render("dashboard");
 });
 
 module.exports = router;

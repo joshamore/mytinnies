@@ -82,8 +82,9 @@ router.get("/register", (req, res) => {
 // Login handle
 router.post("/login", (req, res, next) => {
 	passport.authenticate("local", {
-		successRedirect: "/users/login",
-		failureRedirect: "/users/fail",
+		successRedirect: "/dashboard",
+		failureRedirect: "/users/login",
+		failureFlash: true,
 	})(req, res, next);
 });
 
@@ -93,20 +94,16 @@ router.get("/login", (req, res) => {
 });
 
 // Logout handle
-router.post("/logout", (req, res) => {
+router.get("/logout", (req, res) => {
 	// If user is currently logged in, logs them out
 	if (req.isAuthenticated()) {
 		req.logout();
-		res.redirect("/users/logout");
+		req.flash("success_msg", "You have logged out 👍");
+		res.redirect("/users/login");
 	} else {
 		// Redirects user to homepage if they're not logged in
 		res.redirect("/");
 	}
-});
-
-// Logout route
-router.get("/logout", (req, res) => {
-	res.send("yeah mate, just left the pub");
 });
 
 // Auth test route

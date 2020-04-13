@@ -58,13 +58,13 @@ router.post("/register", (req, res) => {
 					// Creating new user
 					userHelpers
 						.createNewUser(firstName, lastName, email, password)
-						.then((newUser) =>
-							// TODO: This is a placeholder -- will need a different success response/process when
-							// frontend exists.
-							res.send({
-								success: `New user created with ID ${newUser}`,
-							})
-						)
+						.then((newUser) => {
+							req.flash(
+								"success_msg",
+								"You have registered. Welcome to MyTinnies!"
+							);
+							res.redirect("/users/login");
+						})
 						.catch((err) => {
 							res.send({ error: err.message });
 						});

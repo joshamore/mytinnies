@@ -7,7 +7,7 @@ const bodyParser = require("body-parser");
 const session = require("express-session");
 const passport = require("passport");
 const cors = require("cors");
-const { ensureAuthenticated } = require("./config/auth");
+const expressLayouts = require("express-ejs-layouts");
 
 // Passport Config
 require("./config/passport")(passport);
@@ -23,14 +23,18 @@ const sqlite3 = require("sqlite3").verbose();
 // Create express server
 const app = express();
 
-// Adding body parser middleware
+// EJS middleware
+app.use(expressLayouts);
+app.set("view engine", "ejs");
+
+// Body parser middleware
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(bodyParser.json());
 
-// Adding CORS middleware
+// CORS middleware
 app.use(cors());
 
-// Adding express session middleware
+// Express session middleware
 app.use(
 	session({
 		secret: process.env.SESSION_SECRET,
@@ -43,14 +47,8 @@ app.use(
 app.use(passport.initialize());
 app.use(passport.session());
 
-// Index route
-app.get("/", (req, res) => {
-	// Testing that session is initialised and working.
-	req.session.views = req.session.views + 1;
-	res.send(`<h1>My Tinnies</h1> ${req.session.views}`);
-});
-
 // Routes
+app.use("/", require("./routes/index"));
 app.use("/users", require("./routes/users"));
 app.use("/api", require("./routes/api"));
 

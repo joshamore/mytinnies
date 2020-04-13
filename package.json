@@ -1,36 +1,36 @@
 {
-  "name": "tinnies",
-  "version": "1.0.0",
-  "description": "A helpful tool to track ya tinnies.",
-  "main": "app.js",
-  "scripts": {
-    "start": "node app",
-    "dev": "nodemon app"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/joshamore/tinnies.git"
-  },
-  "author": "Josh Amore",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/joshamore/tinnies/issues"
-  },
-  "homepage": "https://github.com/joshamore/tinnies#readme",
-  "dependencies": {
-    "bcryptjs": "^2.4.3",
-    "body-parser": "^1.19.0",
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "express-session": "^1.17.0",
-    "passport": "^0.4.1",
-    "passport-local": "^1.0.0",
-    "sequelize": "^5.21.5",
-    "sqlite3": "^4.1.1"
-  },
-  "devDependencies": {
-    "dotenv": "^8.2.0",
-    "nodemon": "^2.0.2",
-    "prettier": "^2.0.2"
-  }
+	"name": "tinnies",
+	"version": "1.0.0",
+	"description": "A helpful tool to track ya tinnies.",
+	"main": "app.js",
+	"scripts": {
+		"start": "node app",
+		"dev": "nodemon app"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/joshamore/tinnies.git"
+	},
+	"author": "Josh Amore",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/joshamore/tinnies/issues"
+	},
+	"homepage": "https://github.com/joshamore/tinnies#readme",
+	"dependencies": {
+		"bcryptjs": "^2.4.3",
+		"body-parser": "^1.19.0",
+		"cors": "^2.8.5",
+		"express": "^4.17.1",
+		"express-ejs-layouts": "^2.5.0",
+		"express-session": "^1.17.0",
+		"passport": "^0.4.1",
+		"passport-local": "^1.0.0",
+		"sqlite3": "^4.1.1"
+	},
+	"devDependencies": {
+		"dotenv": "^8.2.0",
+		"nodemon": "^2.0.2",
+		"prettier": "^2.0.2"
+	}
 }

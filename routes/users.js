@@ -43,11 +43,6 @@ router.post("/login", (req, res, next) => {
 	})(req, res, next);
 });
 
-// Login success route
-router.get("/login", (req, res) => {
-	res.send("yeah all good mate");
-});
-
 // Logout handle
 router.post("/logout", (req, res) => {
 	// If user is currently logged in, logs them out
@@ -58,11 +53,6 @@ router.post("/logout", (req, res) => {
 		// Redirects user to homepage if they're not logged in
 		res.redirect("/");
 	}
-});
-
-// Logout route
-router.get("/logout", (req, res) => {
-	res.send("yeah mate, just left the pub");
 });
 
 // Auth test route

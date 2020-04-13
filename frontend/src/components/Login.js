@@ -31,7 +31,7 @@ export class Login extends Component {
 			body: searchParamsForm,
 		})
 			.then((data) => {
-				// TODO: this should redirect
+				// TODO: This needs to redicted somehow.
 				console.log(data);
 			})
 			.catch((e) => {

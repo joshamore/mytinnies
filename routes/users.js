@@ -69,6 +69,7 @@ router.get("/logout", (req, res) => {
 // Note: this route shows how you confirm auth (with ensureAuthenticated)
 // TODO: delete when finshed with setup of passport/sessions
 router.get("/auth", ensureAuthenticated, (req, res) => {
+	console.log("good");
 	res.send("AUTH YEAH");
 });
 

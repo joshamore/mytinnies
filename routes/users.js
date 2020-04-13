@@ -42,9 +42,18 @@ router.post("/register", (req, res) => {
 		userHelpers
 			.checkUserExistsByEmail(email)
 			.then((confirm) => {
-				// If user already exists, respond with error
+				// If user already exists, add error
 				if (confirm) {
-					throw Error("Email address already registered");
+					errors.push({ msg: "Email already registered" });
+
+					res.render("register", {
+						errors,
+						firstName,
+						lastName,
+						email,
+						password,
+						password2,
+					});
 				} else {
 					// Creating new user
 					userHelpers

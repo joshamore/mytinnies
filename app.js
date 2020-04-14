@@ -24,6 +24,9 @@ const sqlite3 = require("sqlite3").verbose();
 // Create express server
 const app = express();
 
+// Set static folder
+app.use(express.static(path.join(__dirname, "public")));
+
 // EJS middleware
 app.use(expressLayouts);
 app.set("view engine", "ejs");

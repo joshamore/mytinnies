@@ -1,6 +1,12 @@
+// TODO: remove in production
+const DOMAIN = "http://localhost:5000";
+
+// NOTE: JS is written in an odd wasy to make the transiton to React easier.
+
+// Calls to backend API
 const getters = {
 	getTinnies: async function () {
-		const url = "http://localhost:5000/api/getTinnies";
+		const url = `${DOMAIN}/api/getTinnies`;
 
 		try {
 			let response = await fetch(url);
@@ -16,16 +22,27 @@ const getters = {
 	},
 };
 
-function authTest() {
-	const url = "http://localhost:5000/users/auth";
-	fetch(url);
-}
+// Page renders
+const renders = {
+	tinniesCountDash: function () {
+		const tinniesEl = document.getElementById("tinnies");
 
-document.onload = getters
-	.getTinnies()
-	.then((tinnies) => {
-		document.getElementById("tinnies").innerHTML = tinnies.tinnies;
-	})
-	.catch((err) => {
-		console.error(err.message);
-	});
+		if (tinniesEl !== null) {
+			tinniesEl.onload = getters
+				.getTinnies()
+				.then((tinnies) => {
+					document.getElementById(
+						"tinnies"
+					).innerHTML = `<h2>Ya Tinniez:</h2><div><p>${tinnies.tinnies}</p></div>`;
+				})
+				.catch((err) => {
+					console.error(err.message);
+				});
+		}
+	},
+};
+
+// Render events
+if (window.location.href === `${DOMAIN}/dashboard`) {
+	renders.tinniesCountDash();
+}

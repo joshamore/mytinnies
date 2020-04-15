@@ -6,6 +6,9 @@ const DOMAIN = "http://localhost:5000";
 // Calls to backend API
 const api = {
 	getTinnies: async function () {
+		/*
+			Returns the tinnies table row for the current user.
+		*/
 		const url = `${DOMAIN}/api/getTinnies`;
 
 		try {
@@ -21,6 +24,11 @@ const api = {
 		}
 	},
 	drinkTinnie: async function () {
+		/*
+			Reduces the current user's tinnies by 1.
+
+			@returns a boolean of true if successful or false if fails
+		*/
 		const url = `${DOMAIN}/api/drinkTinnies`;
 
 		try {
@@ -41,6 +49,9 @@ const api = {
 // Page render functions
 const renders = {
 	tinniesCountDash: function () {
+		/*
+			Renders the current user's tinnies count to the dashboard.
+		*/
 		const tinniesEl = document.getElementById("tinnies");
 
 		if (tinniesEl !== null) {

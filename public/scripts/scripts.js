@@ -71,7 +71,7 @@ const renders = {
 
 // Render events
 if (window.location.href === `${DOMAIN}/dashboard`) {
-	// Renders cunt of tinies on pageload of dashboard.
+	// Renders count of tinies on pageload of dashboard.
 	renders.tinniesCountDash();
 
 	// Drinks a tinnie on button click and rerenders the counter total.

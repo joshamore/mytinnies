@@ -7,7 +7,7 @@ const DOMAIN = "http://localhost:5000";
 const api = {
 	getTinnies: async function () {
 		/*
-			Returns the tinnies table row for the current user.
+			@returns the tinnies table row for the current user.
 		*/
 		const url = `${DOMAIN}/api/getTinnies`;
 

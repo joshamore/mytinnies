@@ -72,12 +72,15 @@ router.post("/addTinnies/", ensureAuthenticated, (req, res) => {
 		.getUserTinniesData(req.user.user_id)
 		.then((userData) => {
 			dbHelpers
-				.updateTinnies(userData.tinnies + req.body.newTinnies, req.user.user_id)
+				.updateTinnies(
+					parseInt(userData.tinnies) + parseInt(req.body.newTinnies),
+					req.user.user_id
+				)
 				.then((didUpdate) => {
 					if (didUpdate) {
 						res.json({
 							success: `User now has ${
-								userData.tinnies + req.body.newTinnies
+								parseInt(userData.tinnies) + parseInt(req.body.newTinnies)
 							} tinnie(s)`,
 						});
 					} else {

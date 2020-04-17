@@ -84,6 +84,8 @@ if (window.location.href === `${DOMAIN}/dashboard`) {
 
 if (window.location.href === `${DOMAIN}/add`) {
 	document.getElementById("addTinnies").addEventListener("click", () => {
-		console.log("Clicky tinnie");
+		const tinniesVal = document.getElementById("tinniesVal").value;
+		console.log(tinniesVal);
+		//TODO
 	});
 }

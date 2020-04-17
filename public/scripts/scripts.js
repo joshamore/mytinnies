@@ -105,6 +105,11 @@ if (window.location.href === `${DOMAIN}/dashboard`) {
 
 	// Drinks a tinnie on button click and rerenders the counter total.
 	document.getElementById("smashTinnie").addEventListener("click", () => {
+		// Stores audio of tinnie opening
+		const smashTinnieSOUND = new Audio("/audio/tinnie.mp3");
+		// Plays audio
+		smashTinnieSOUND.play();
+
 		api.drinkTinnie().then((res) => {
 			if (res) renders.tinniesCountDash();
 		});

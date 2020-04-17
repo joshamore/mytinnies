@@ -110,6 +110,7 @@ if (window.location.href === `${DOMAIN}/dashboard`) {
 		// Plays audio
 		smashTinnieSOUND.play();
 
+		// Updated tinnies DB count and rerenders count on page
 		api.drinkTinnie().then((res) => {
 			if (res) renders.tinniesCountDash();
 		});
@@ -125,7 +126,11 @@ if (window.location.href === `${DOMAIN}/add`) {
 		if (tinniesVal < 1 || !tinniesVal) {
 			renders.errorAdd("Invalid number of tinnies mate. Try again.");
 		} else {
-			api.addTinnies(tinniesVal).then((reply) => console.log(reply));
+			// Updated tinnies in DB
+			api.addTinnies(tinniesVal).then((reply) => {
+				// redirects to dashboard
+				window.location.href = `${DOMAIN}/dashboard`;
+			});
 		}
 	});
 }

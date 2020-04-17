@@ -93,7 +93,7 @@ const renders = {
 		// Renders error on add tinnies screen
 		document.getElementById(
 			"alertHouse"
-		).innerHTML = `<div class="alert alert-dismissible alert-danger">
+		).innerHTML = `<div id="addAlert" class="alert alert-dismissible alert-danger">
 		<button type="button" class="close" data-dismiss="alert">&times;</button>${errorMsg}</div>`;
 	},
 };
@@ -114,11 +114,13 @@ if (window.location.href === `${DOMAIN}/dashboard`) {
 if (window.location.href === `${DOMAIN}/add`) {
 	document.getElementById("addTinnies").addEventListener("click", () => {
 		const tinniesVal = document.getElementById("tinniesVal").value;
-		console.log(tinniesVal);
+		console.log(parseInt(tinniesVal));
 
 		// If value is invalid, triggering an error.
 		if (tinniesVal < 1 || !tinniesVal) {
 			renders.errorAdd("Invalid number of tinnies mate. Try again.");
+		} else {
+			api.addTinnies(tinniesVal).then((reply) => console.log(reply));
 		}
 	});
 }

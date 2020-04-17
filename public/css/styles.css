@@ -3,3 +3,9 @@
 	width: 50%;
 	font-size: 200%;
 }
+
+.alert {
+	margin: auto;
+	margin-bottom: 20px;
+	width: 400px;
+}

@@ -89,6 +89,13 @@ const renders = {
 				});
 		}
 	},
+	errorAdd: function (errorMsg) {
+		// Renders error on add tinnies screen
+		document.getElementById(
+			"alertHouse"
+		).innerHTML = `<div class="alert alert-dismissible alert-danger">
+		<button type="button" class="close" data-dismiss="alert">&times;</button>${errorMsg}</div>`;
+	},
 };
 
 // Render events
@@ -109,8 +116,9 @@ if (window.location.href === `${DOMAIN}/add`) {
 		const tinniesVal = document.getElementById("tinniesVal").value;
 		console.log(tinniesVal);
 
+		// If value is invalid, triggering an error.
 		if (tinniesVal < 1 || !tinniesVal) {
-			//TODO
+			renders.errorAdd("Invalid number of tinnies mate. Try again.");
 		}
 	});
 }

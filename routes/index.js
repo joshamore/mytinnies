@@ -18,7 +18,6 @@ router.get("/dashboard", ensureAuthenticated, (req, res) => {
 
 // Add tinnies route
 router.get("/add", ensureAuthenticated, (req, res) => {
-	//TODO
 	res.render("add");
 });
 

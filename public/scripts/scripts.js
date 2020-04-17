@@ -44,6 +44,28 @@ const api = {
 			return false;
 		}
 	},
+	addTinnies: async function (newTinnies) {
+		/*
+			@returns the new tinnies count
+		*/
+		const url = `${DOMAIN}/api/addTinnies`;
+
+		try {
+			let response = await fetch(url, {
+				method: "POST",
+				headers: { "Content-Type": "application/json" },
+				body: JSON.stringify({ newTinnies: newTinnies }),
+			});
+			if (response.redirected === true) {
+				return Error("NO Auth");
+			} else {
+				return await response.json();
+			}
+		} catch (err) {
+			console.error(err);
+			return Error("Failed to add tinnies");
+		}
+	},
 };
 
 // Page render functions
@@ -86,6 +108,9 @@ if (window.location.href === `${DOMAIN}/add`) {
 	document.getElementById("addTinnies").addEventListener("click", () => {
 		const tinniesVal = document.getElementById("tinniesVal").value;
 		console.log(tinniesVal);
-		//TODO
+
+		if (tinniesVal < 1 || !tinniesVal) {
+			//TODO
+		}
 	});
 }

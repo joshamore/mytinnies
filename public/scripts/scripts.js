@@ -116,7 +116,6 @@ if (window.location.href === `${DOMAIN}/dashboard`) {
 		});
 	});
 }
-
 if (window.location.href === `${DOMAIN}/add`) {
 	document.getElementById("addTinnies").addEventListener("click", () => {
 		const tinniesVal = document.getElementById("tinniesVal").value;

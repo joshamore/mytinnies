@@ -14,7 +14,11 @@
 			<% history.forEach(row => { %> <% let date = new Date(row.datetime * 1000)
 			%>
 			<tr>
-				<%= date %> <%= %>
+				<td><%= date %> <%= %></td>
+				<td>
+					<%= parseInt(row.pos_or_neg) + 1 ? "Drank" : "Added" %>
+				</td>
+				<td><%= row.history_tinnies_count %></td>
 			</tr>
 			<% }) %>
 		</tbody>

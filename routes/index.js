@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-const passport = require("passport");
 const { ensureAuthenticated } = require("../config/auth");
 
 // Index route
@@ -24,7 +23,7 @@ router.get("/add", ensureAuthenticated, (req, res) => {
 // History route
 router.get("/history", ensureAuthenticated, (req, res) => {
 	//TODO
-	res.render("hisory");
+	res.render("history");
 });
 
 module.exports = router;

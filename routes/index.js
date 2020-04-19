@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const dbHelpers = require("../helpers/dbHelpers");
 const { ensureAuthenticated } = require("../config/auth");
 
 // Index route
@@ -27,8 +28,18 @@ router.get("/add", ensureAuthenticated, (req, res) => {
 
 // History route
 router.get("/history", ensureAuthenticated, (req, res) => {
-	//TODO
-	res.render("history");
+	// Getting user history or redirecting to dashboard on error.
+	dbHelpers
+		.getUserHistory(req.user.user_id)
+		.then((history) => {
+			res.render("history", {
+				history: history,
+			});
+		})
+		.catch((err) => {
+			console.log(err.message);
+			res.redirect("/dashboard");
+		});
 });
 
 module.exports = router;

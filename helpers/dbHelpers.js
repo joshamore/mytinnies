@@ -238,4 +238,42 @@ module.exports = {
 			});
 		});
 	},
+	getUserHistory: function (user_ID) {
+		/*
+			@args user_ID = the user's ID.
+
+			@returns a promise that will resolve to an object containing the user's history
+		*/
+		return new Promise((res, rej) => {
+			// Opening DB connection
+			let db = new sqlite3.Database(
+				"./MyTinnies.db",
+				sqlite3.OPEN_READWRITE,
+				(err) => {
+					if (err) {
+						rej(Error("Unable to open DB"));
+					} else {
+						console.log("Connected to the SQlite database.");
+					}
+				}
+			);
+
+			// Query to get user history data from DB
+			let sql = `SELECT * FROM history WHERE user_id=?`;
+
+			// Getting DB data and closing
+			db.all(sql, [user_ID], (err, rows) => {
+				if (err) {
+					db.close();
+					rej(Error("Unable to access user record"));
+				} else if (rows === undefined) {
+					db.close();
+					res({ userNotFound: true });
+				} else {
+					db.close();
+					res(rows);
+				}
+			});
+		});
+	},
 };

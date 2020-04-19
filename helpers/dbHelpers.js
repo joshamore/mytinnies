@@ -7,6 +7,7 @@ module.exports = {
 			@args lastName = the new user's last name
 			@args email = the new user's email
 			@args passwordHash = the new user's hashed password
+
 			@returns a promise which will resolve as an object containing the user's new ID
 		*/
 		return new Promise((res, rej) => {
@@ -43,6 +44,7 @@ module.exports = {
 		/*
 			@args userID = the new user's ID
 			@args tinnies = the number of tinnies for new user
+
 			@returns a promise which will resolve with the tinnies record ID
 		*/
 		return new Promise((res, rej) => {
@@ -76,9 +78,58 @@ module.exports = {
 			});
 		});
 	},
+	createUserHistoryRecord: function (userID, tinniesCount, posOrNeg) {
+		/*
+			@args userID = the user's ID
+			@returns a promise with boolean true if successful or boolean false if failed.
+		*/
+
+		return new Promise((res, rej) => {
+			// Rejecting with error if invalid argument passed
+			if (posOrNeg > 1 || posOrNeg < -2 || posOrNeg === 0) {
+				rej(Error("posOrNeg value (3rd arg) must be -1 or 1"));
+			} else if (tinniesCount <= 0) {
+				rej(Error("tinnies count must be a positive number" + tinniesCount));
+			} else {
+				// Opening DB connection
+				let db = new sqlite3.Database(
+					"./MyTinnies.db",
+					sqlite3.OPEN_READWRITE,
+					(err) => {
+						if (err) {
+							rej(Error("Unable to open DB"));
+						} else {
+							console.log("Connected to the SQlite database.");
+						}
+					}
+				);
+
+				// Creating unix timestamp as string
+				const timestamp = Math.floor(Date.now() / 1000).toString();
+
+				// Query to create history record
+				let sql =
+					'INSERT INTO history ("user_id", "datetime", "pos_or_neg", "history_tinnies_count") VALUES (?, ?, ?, ?)';
+
+				// Updating DB data and closing
+				db.run(sql, [userID, timestamp, posOrNeg, tinniesCount], function (
+					err
+				) {
+					if (err) {
+						db.close();
+						rej(Error("Unable to create history record"));
+					} else {
+						db.close();
+						res(true);
+					}
+				});
+			}
+		});
+	},
 	getUserTinniesData: (userID) => {
 		/*
 			@args userID = the user's ID
+
 			@returns a promise which will resolve as an object containing the user's ID and tinnnies count.
 		*/
 		return new Promise((res, rej) => {
@@ -116,6 +167,7 @@ module.exports = {
 	updateTinnies: (newTinnies, user) => {
 		/*
 			@args newTinnies = the updated number of tinnies for the current user
+
 			@returns a boolean promise with true if the update was successful or false if unsuccessful
 		*/
 		return new Promise((res, rej) => {
@@ -151,6 +203,7 @@ module.exports = {
 	getUserFromEmail: (email) => {
 		/*
 			@args email = the user email address to retrieve from DB
+
 			@returns an object promise containing the user's data or object with userNotFound = true
 		*/
 		return new Promise((res, rej) => {

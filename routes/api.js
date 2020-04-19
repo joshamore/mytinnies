@@ -40,6 +40,15 @@ router.post("/drinkTinnies/", ensureAuthenticated, (req, res) => {
 					.updateTinnies(userData.tinnies - req.body.drank, req.user.user_id)
 					.then((didUpdate) => {
 						if (didUpdate) {
+							// Adding history record
+							dbHelpers
+								.createUserHistoryRecord(
+									parseInt(req.user.user_id),
+									parseInt(req.body.drank),
+									-1
+								)
+								.catch((err) => console.log(err));
+							// Returning success message
 							res.json({ success: `User drank ${req.body.drank} tinnie(s)` });
 						} else {
 							res.status(500).json({ error: "Error updating user tinnies" });
@@ -78,6 +87,15 @@ router.post("/addTinnies/", ensureAuthenticated, (req, res) => {
 				)
 				.then((didUpdate) => {
 					if (didUpdate) {
+						// Adding history record
+						dbHelpers
+							.createUserHistoryRecord(
+								parseInt(req.user.user_id),
+								parseInt(req.body.newTinnies),
+								1
+							)
+							.catch((err) => console.log(err));
+						// Returning success confirmation
 						res.json({
 							success: `User now has ${
 								parseInt(userData.tinnies) + parseInt(req.body.newTinnies)

@@ -28,7 +28,8 @@ module.exports = {
 	passwordHashCompare: (plaintext, hash) => {
 		/*
             @args plaintext = the plaintext password to be compared
-            @args hash = the hashed password to comapare with the plaintext password
+			@args hash = the hashed password to comapare with the plaintext password
+			
             @retrns a promise that will resolve with a bool true if passwords match or false if not
         */
 		return new Promise((res, rej) => {
@@ -42,7 +43,8 @@ module.exports = {
 	},
 	checkUserExistsByEmail: (email) => {
 		/*
-            @args email = the user email to confirm if it's in use
+			@args email = the user email to confirm if it's in use
+			
             @retrns a promise that will resolve with a bool true if user exists or false if not
         */
 		return new Promise((res, rej) => {
@@ -64,6 +66,7 @@ module.exports = {
 			@args lastName = the new user's last name
 			@args email = the new user's email address
 			@args password = the new user's password in plaintext
+
             @retrns a promise that will resolve with the new user's ID
         */
 		try {

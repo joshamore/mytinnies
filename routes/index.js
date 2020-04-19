@@ -21,4 +21,10 @@ router.get("/add", ensureAuthenticated, (req, res) => {
 	res.render("add");
 });
 
+// History route
+router.get("/history", ensureAuthenticated, (req, res) => {
+	//TODO
+	res.render("hisory");
+});
+
 module.exports = router;

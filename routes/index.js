@@ -4,7 +4,12 @@ const { ensureAuthenticated } = require("../config/auth");
 
 // Index route
 router.get("/", (req, res) => {
-	res.render("welcome");
+	// Redirects to dashboard if logged in. Otherwise, renders welcome screen.
+	if (req.isAuthenticated()) {
+		res.redirect("/dashboard");
+	} else {
+		res.render("welcome");
+	}
 });
 
 // Dashboard route

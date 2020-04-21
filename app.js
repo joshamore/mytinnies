@@ -1,7 +1,3 @@
-if (process.env.NODE_ENV !== "production") {
-	require("dotenv").config();
-}
-
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
@@ -10,6 +6,9 @@ const passport = require("passport");
 const cors = require("cors");
 const expressLayouts = require("express-ejs-layouts");
 const flash = require("connect-flash");
+
+// DOTENV Config
+require("dotenv").config();
 
 // Passport Config
 require("./config/passport")(passport);

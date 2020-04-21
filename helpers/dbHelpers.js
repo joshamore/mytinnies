@@ -134,35 +134,61 @@ module.exports = {
 			@returns a promise which will resolve as an object containing the user's ID and tinnnies count.
 		*/
 		return new Promise((res, rej) => {
-			// Opening DB connection
-			let db = new sqlite3.Database(
-				"./MyTinnies.db",
-				sqlite3.OPEN_READWRITE,
-				(err) => {
-					if (err) {
-						rej(Error("Unable to open DB"));
-					} else {
-						console.log("Connected to the SQlite database.");
-					}
-				}
-			);
+			// Connecting to PG database
+			const pool = new Pool({
+				user: process.env.PG_USER,
+				host: process.env.PG_URL,
+				database: process.env.DB_NAME,
+				password: process.env.PG_PASSWORD,
+				port: process.env.PG_PORT,
+			});
 
-			// Query to get user data from DB
-			let sql = `SELECT * FROM tinnies WHERE user_ID=?`;
+			// Setting query
+			const sql = "SELECT * FROM tinnies WHERE user_id=($1)";
 
-			// Getting DB data and closing
-			db.get(sql, [userID], (err, row) => {
+			// Getting tinnies record
+			pool.query(sql, [userID], (err, userData) => {
 				if (err) {
-					db.close();
-					rej(Error("Unable to access user"));
-				} else if (row === undefined) {
-					db.close();
-					rej(Error("User does not exist"));
+					pool.end();
+					rej(Error("Unable to access user tinnies record"));
+				} else if (userData.rowCount === 0) {
+					pool.end();
+					rej(Error("No tinnies record"));
 				} else {
-					db.close();
-					res(row);
+					pool.end();
+					res(userData.rows);
 				}
 			});
+
+			// // Opening DB connection
+			// let db = new sqlite3.Database(
+			// 	"./MyTinnies.db",
+			// 	sqlite3.OPEN_READWRITE,
+			// 	(err) => {
+			// 		if (err) {
+			// 			rej(Error("Unable to open DB"));
+			// 		} else {
+			// 			console.log("Connected to the SQlite database.");
+			// 		}
+			// 	}
+			// );
+
+			// // Query to get user data from DB
+			// let sql = `SELECT * FROM tinnies WHERE user_ID=?`;
+
+			// // Getting DB data and closing
+			// db.get(sql, [userID], (err, row) => {
+			// 	if (err) {
+			// 		db.close();
+			// 		rej(Error("Unable to access user"));
+			// 	} else if (row === undefined) {
+			// 		db.close();
+			// 		rej(Error("User does not exist"));
+			// 	} else {
+			// 		db.close();
+			// 		res(row);
+			// 	}
+			// });
 		});
 	},
 	updateTinnies: (newTinnies, user) => {
@@ -205,7 +231,7 @@ module.exports = {
 		/*
 			@args email = the user email address to retrieve from DB
 
-			@returns an object promise containing the user's data or object with userNotFound = true
+			@returns an object promise containing the user's data or an empty array if no user exists
 		*/
 		return new Promise((res, rej) => {
 			// Connecting to PG database
@@ -220,7 +246,7 @@ module.exports = {
 			// Setting query
 			const sql = "SELECT * FROM users WHERE email=($1)";
 
-			// Test query to get all users
+			// Getting user's data
 			pool.query(sql, [email], (err, userData) => {
 				if (err) {
 					pool.end();

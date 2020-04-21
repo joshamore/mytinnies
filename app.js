@@ -80,12 +80,8 @@ app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 const dbHelpers = require("./helpers/dbHelpers");
 
 dbHelpers
-	.getUserFromEmail("josh@josamore.com")
+	.getUserTinniesData(1)
 	.then((row) => {
-		if (row.length === 0) {
-			console.log("user unknown");
-		} else {
-			console.log(row);
-		}
+		console.log(row);
 	})
-	.catch((err) => console.log(err.messsage));
+	.catch((err) => console.log(err));

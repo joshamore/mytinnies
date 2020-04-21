@@ -6,6 +6,7 @@ const passport = require("passport");
 const cors = require("cors");
 const expressLayouts = require("express-ejs-layouts");
 const flash = require("connect-flash");
+const { Pool, Client } = require("pg");
 
 // DOTENV Config
 require("dotenv").config();
@@ -17,6 +18,9 @@ require("./config/passport")(passport);
 	NOTE RE testing DB: 
 		- User ID 1 has a plaintext password of: "reeeeeeeeeee"
 		- User ID 2 has a plaintext password of: "cool stuff"
+
+	in PG:
+	user 1 password = testybruhyas
 */
 
 // TODO: Below is for dev only remove before deploying
@@ -72,3 +76,23 @@ const PORT = process.env.PORT || 5000;
 
 // Starting server
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
+
+/////////////// Testing for pg
+// Connecting to PG database
+const pool = new Pool({
+	user: process.env.PG_USER,
+	host: process.env.PG_URL,
+	database: process.env.DB_NAME,
+	password: process.env.PG_PASSWORD,
+	port: process.env.PG_PORT,
+});
+
+// Test query to get all users
+pool.query("SELECT * FROM users", (err, res) => {
+	if (err) {
+		console.error(e.message);
+	} else {
+		console.log(res.rows);
+	}
+	pool.end();
+});

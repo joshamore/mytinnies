@@ -80,7 +80,7 @@ app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 const dbHelpers = require("./helpers/dbHelpers");
 
 dbHelpers
-	.createUserTinniesRecord(6, 99)
+	.createUserHistoryRecord(4, 10, 1)
 	.then((data) => {
 		console.log(data);
 	})

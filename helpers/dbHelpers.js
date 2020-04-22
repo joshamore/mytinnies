@@ -135,49 +135,89 @@ module.exports = {
 	createUserHistoryRecord: function (userID, tinniesCount, posOrNeg) {
 		/*
 			@args userID = the user's ID
-			@returns a promise with boolean true if successful or boolean false if failed.
+			@returns a promise with boolean true if successful or throws error
 		*/
 
 		return new Promise((res, rej) => {
-			// Rejecting with error if invalid argument passed
+			// Connecting to PG database
+			const pool = new Pool({
+				user: process.env.PG_USER,
+				host: process.env.PG_URL,
+				database: process.env.DB_NAME,
+				password: process.env.PG_PASSWORD,
+				port: process.env.PG_PORT,
+			});
+
+			// Creating unix timestamp as string
+			const timestamp = Math.floor(Date.now() / 1000).toString();
+
+			// Setting query
+			const sql =
+				'INSERT INTO history ("user_id", "datetime", "pos_or_neg", "history_tinnies_count") VALUES ($1, $2, $3, $4) RETURNING *';
+
+			// Rejecting with error if invalid argument passed. Otherwise, adding record.
 			if (posOrNeg > 1 || posOrNeg < -2 || posOrNeg === 0) {
 				rej(Error("posOrNeg value (3rd arg) must be -1 or 1"));
 			} else if (tinniesCount <= 0) {
 				rej(Error("tinnies count must be a positive number" + tinniesCount));
 			} else {
-				// Opening DB connection
-				let db = new sqlite3.Database(
-					"./MyTinnies.db",
-					sqlite3.OPEN_READWRITE,
-					(err) => {
+				// Inserting record into history table
+				pool.query(
+					sql,
+					[userID, timestamp, posOrNeg, tinniesCount],
+					(err, userData) => {
 						if (err) {
-							rej(Error("Unable to open DB"));
+							pool.end();
+							rej(Error("Unable to create history record"));
+						} else if (userData.rowCount === 0) {
+							rej(Error("Issue creating history record"));
 						} else {
-							console.log("Connected to the SQlite database.");
+							pool.end();
+							res(true);
 						}
 					}
 				);
-
-				// Creating unix timestamp as string
-				const timestamp = Math.floor(Date.now() / 1000).toString();
-
-				// Query to create history record
-				let sql =
-					'INSERT INTO history ("user_id", "datetime", "pos_or_neg", "history_tinnies_count") VALUES (?, ?, ?, ?)';
-
-				// Updating DB data and closing
-				db.run(sql, [userID, timestamp, posOrNeg, tinniesCount], function (
-					err
-				) {
-					if (err) {
-						db.close();
-						rej(Error("Unable to create history record"));
-					} else {
-						db.close();
-						res(true);
-					}
-				});
 			}
+
+			// // Rejecting with error if invalid argument passed
+			// if (posOrNeg > 1 || posOrNeg < -2 || posOrNeg === 0) {
+			// 	rej(Error("posOrNeg value (3rd arg) must be -1 or 1"));
+			// } else if (tinniesCount <= 0) {
+			// 	rej(Error("tinnies count must be a positive number" + tinniesCount));
+			// } else {
+			// 	// Opening DB connection
+			// 	let db = new sqlite3.Database(
+			// 		"./MyTinnies.db",
+			// 		sqlite3.OPEN_READWRITE,
+			// 		(err) => {
+			// 			if (err) {
+			// 				rej(Error("Unable to open DB"));
+			// 			} else {
+			// 				console.log("Connected to the SQlite database.");
+			// 			}
+			// 		}
+			// 	);
+
+			// 	// Creating unix timestamp as string
+			// 	const timestamp = Math.floor(Date.now() / 1000).toString();
+
+			// 	// Query to create history record
+			// 	let sql =
+			// 		'INSERT INTO history ("user_id", "datetime", "pos_or_neg", "history_tinnies_count") VALUES (?, ?, ?, ?)';
+
+			// 	// Updating DB data and closing
+			// 	db.run(sql, [userID, timestamp, posOrNeg, tinniesCount], function (
+			// 		err
+			// 	) {
+			// 		if (err) {
+			// 			db.close();
+			// 			rej(Error("Unable to create history record"));
+			// 		} else {
+			// 			db.close();
+			// 			res(true);
+			// 		}
+			// 	});
+			// }
 		});
 	},
 	getUserTinniesData: (userID) => {

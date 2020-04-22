@@ -12,33 +12,63 @@ module.exports = {
 			@returns a promise which will resolve as an object containing the user's new ID
 		*/
 		return new Promise((res, rej) => {
-			// Opening DB connection
-			let db = new sqlite3.Database(
-				"./MyTinnies.db",
-				sqlite3.OPEN_READWRITE,
-				(err) => {
+			// Connecting to PG database
+			const pool = new Pool({
+				user: process.env.PG_USER,
+				host: process.env.PG_URL,
+				database: process.env.DB_NAME,
+				password: process.env.PG_PASSWORD,
+				port: process.env.PG_PORT,
+			});
+
+			// Setting query
+			const sql =
+				"INSERT INTO users(first_name, last_name, email, password_hash) VALUES ($1, $2, $3, $4) RETURNING *";
+
+			// Creating record in users table
+			pool.query(
+				sql,
+				[firstName, lastName, email, passwordHash],
+				(err, userData) => {
 					if (err) {
-						rej(Error("Unable to open DB"));
+						pool.end();
+						rej(Error("Unable to create users record"));
+					} else if (userData.rowCount === 0) {
+						rej(Error("Issue creating user record"));
 					} else {
-						console.log("Connected to the SQlite database.");
+						pool.end();
+						res(userData.rows[0].user_id);
 					}
 				}
 			);
 
-			// Query to create user record
-			let sql =
-				'INSERT INTO users ("first_name", "last_name", "email", "password_hash") VALUES (?, ?, ?, ?)';
+			// // Opening DB connection
+			// let db = new sqlite3.Database(
+			// 	"./MyTinnies.db",
+			// 	sqlite3.OPEN_READWRITE,
+			// 	(err) => {
+			// 		if (err) {
+			// 			rej(Error("Unable to open DB"));
+			// 		} else {
+			// 			console.log("Connected to the SQlite database.");
+			// 		}
+			// 	}
+			// );
 
-			// Updating DB data and closing
-			db.run(sql, [firstName, lastName, email, passwordHash], function (err) {
-				if (err) {
-					db.close();
-					rej(Error("Unable to create user"));
-				} else {
-					db.close();
-					res(this.lastID);
-				}
-			});
+			// // Query to create user record
+			// let sql =
+			// 	'INSERT INTO users ("first_name", "last_name", "email", "password_hash") VALUES (?, ?, ?, ?)';
+
+			// // Updating DB data and closing
+			// db.run(sql, [firstName, lastName, email, passwordHash], function (err) {
+			// 	if (err) {
+			// 		db.close();
+			// 		rej(Error("Unable to create user"));
+			// 	} else {
+			// 		db.close();
+			// 		res(this.lastID);
+			// 	}
+			// });
 		});
 	},
 	createUserTinniesRecord: (userID, tinnies) => {

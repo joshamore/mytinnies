@@ -79,34 +79,57 @@ module.exports = {
 			@returns a promise which will resolve with the tinnies record ID
 		*/
 		return new Promise((res, rej) => {
-			// Opening DB connection
-			let db = new sqlite3.Database(
-				"./MyTinnies.db",
-				sqlite3.OPEN_READWRITE,
-				(err) => {
-					if (err) {
-						rej(Error("Unable to open DB"));
-					} else {
-						console.log("Connected to the SQlite database.");
-					}
-				}
-			);
+			// Connecting to PG database
+			const pool = new Pool({
+				user: process.env.PG_USER,
+				host: process.env.PG_URL,
+				database: process.env.DB_NAME,
+				password: process.env.PG_PASSWORD,
+				port: process.env.PG_PORT,
+			});
 
-			// Query to create tinnies record
-			let sql = 'INSERT INTO tinnies ("user_id", "tinnies") VALUES (?, ?)';
+			// Setting query
+			const sql =
+				"INSERT INTO tinnies(user_id, tinnies) VALUES ($1, $2) RETURNING *";
 
-			// Updating DB data and closing
-			db.run(sql, [userID, tinnies], function (err) {
+			// Creating record in tinnies table
+			pool.query(sql, [userID, tinnies], (err, userData) => {
 				if (err) {
-					db.close();
-					rej(
-						Error("Unable to create tinnies record (probably exists already)")
-					);
+					pool.end();
+					rej(Error("Unable to create tinnies record"));
+				} else if (userData.rowCount === 0) {
+					rej(Error("Issue creating user record"));
 				} else {
-					db.close();
-					res(this.lastID);
+					pool.end();
+					res(userData.rows[0].record_id);
 				}
 			});
+			// // Opening DB connection
+			// let db = new sqlite3.Database(
+			// 	"./MyTinnies.db",
+			// 	sqlite3.OPEN_READWRITE,
+			// 	(err) => {
+			// 		if (err) {
+			// 			rej(Error("Unable to open DB"));
+			// 		} else {
+			// 			console.log("Connected to the SQlite database.");
+			// 		}
+			// 	}
+			// );
+			// // Query to create tinnies record
+			// let sql = 'INSERT INTO tinnies ("user_id", "tinnies") VALUES (?, ?)';
+			// // Updating DB data and closing
+			// db.run(sql, [userID, tinnies], function (err) {
+			// 	if (err) {
+			// 		db.close();
+			// 		rej(
+			// 			Error("Unable to create tinnies record (probably exists already)")
+			// 		);
+			// 	} else {
+			// 		db.close();
+			// 		res(this.lastID);
+			// 	}
+			// });
 		});
 	},
 	createUserHistoryRecord: function (userID, tinniesCount, posOrNeg) {

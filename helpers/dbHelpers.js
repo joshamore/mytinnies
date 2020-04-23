@@ -1,5 +1,14 @@
 const { Pool, Client } = require("pg");
 
+// Connecting to PG database
+const pool = new Pool({
+	user: process.env.PG_USER,
+	host: process.env.PG_URL,
+	database: process.env.DB_NAME,
+	password: process.env.PG_PASSWORD,
+	port: process.env.PG_PORT,
+});
+
 module.exports = {
 	createNewUserRecord: (firstName, lastName, email, passwordHash) => {
 		/*
@@ -11,15 +20,6 @@ module.exports = {
 			@returns a promise which will resolve as an object containing the user's new ID
 		*/
 		return new Promise((res, rej) => {
-			// Connecting to PG database
-			const pool = new Pool({
-				user: process.env.PG_USER,
-				host: process.env.PG_URL,
-				database: process.env.DB_NAME,
-				password: process.env.PG_PASSWORD,
-				port: process.env.PG_PORT,
-			});
-
 			// Setting query
 			const sql =
 				"INSERT INTO users(first_name, last_name, email, password_hash) VALUES ($1, $2, $3, $4) RETURNING *";
@@ -31,12 +31,10 @@ module.exports = {
 				(err, userData) => {
 					if (err) {
 						console.log("error in user certaion.");
-						pool.end();
 						rej(Error("Unable to create users record"));
 					} else if (userData.rowCount === 0) {
 						rej(Error("Issue creating user record"));
 					} else {
-						pool.end();
 						res(userData.rows[0].user_id);
 					}
 				}
@@ -51,15 +49,6 @@ module.exports = {
 			@returns a promise which will resolve with the tinnies record ID. Otherwise, throws error.
 		*/
 		return new Promise((res, rej) => {
-			// Connecting to PG database
-			const pool = new Pool({
-				user: process.env.PG_USER,
-				host: process.env.PG_URL,
-				database: process.env.DB_NAME,
-				password: process.env.PG_PASSWORD,
-				port: process.env.PG_PORT,
-			});
-
 			// Setting query
 			const sql =
 				"INSERT INTO tinnies(user_id, tinnies) VALUES ($1, $2) RETURNING *";
@@ -67,12 +56,10 @@ module.exports = {
 			// Creating record in tinnies table
 			pool.query(sql, [userID, tinnies], (err, userData) => {
 				if (err) {
-					pool.end();
 					rej(Error("Unable to create tinnies record"));
 				} else if (userData.rowCount === 0) {
 					rej(Error("Issue creating user record"));
 				} else {
-					pool.end();
 					res(userData.rows[0].record_id);
 				}
 			});
@@ -85,15 +72,6 @@ module.exports = {
 		*/
 
 		return new Promise((res, rej) => {
-			// Connecting to PG database
-			const pool = new Pool({
-				user: process.env.PG_USER,
-				host: process.env.PG_URL,
-				database: process.env.DB_NAME,
-				password: process.env.PG_PASSWORD,
-				port: process.env.PG_PORT,
-			});
-
 			// Creating unix timestamp as string
 			const timestamp = Math.floor(Date.now() / 1000).toString();
 
@@ -113,12 +91,10 @@ module.exports = {
 					[userID, timestamp, posOrNeg, tinniesCount],
 					(err, userData) => {
 						if (err) {
-							pool.end();
 							rej(Error("Unable to create history record"));
 						} else if (userData.rowCount === 0) {
 							rej(Error("Issue creating history record"));
 						} else {
-							pool.end();
 							res(true);
 						}
 					}
@@ -133,28 +109,16 @@ module.exports = {
 			@returns a promise which will resolve as an object containing the user's ID and tinnnies count.
 		*/
 		return new Promise((res, rej) => {
-			// Connecting to PG database
-			const pool = new Pool({
-				user: process.env.PG_USER,
-				host: process.env.PG_URL,
-				database: process.env.DB_NAME,
-				password: process.env.PG_PASSWORD,
-				port: process.env.PG_PORT,
-			});
-
 			// Setting query
 			const sql = "SELECT * FROM tinnies WHERE user_id=($1)";
 
 			// Getting tinnies record
 			pool.query(sql, [userID], (err, userData) => {
 				if (err) {
-					pool.end();
 					rej(Error("Unable to access user tinnies record"));
 				} else if (userData.rowCount === 0) {
-					pool.end();
 					rej(Error("No tinnies record"));
 				} else {
-					pool.end();
 					res(userData.rows[0]);
 				}
 			});
@@ -167,15 +131,6 @@ module.exports = {
 			@returns a boolean promise with true if the update was successful or false if unsuccessful
 		*/
 		return new Promise((res, rej) => {
-			// Connecting to PG database
-			const pool = new Pool({
-				user: process.env.PG_USER,
-				host: process.env.PG_URL,
-				database: process.env.DB_NAME,
-				password: process.env.PG_PASSWORD,
-				port: process.env.PG_PORT,
-			});
-
 			// Setting query
 			const sql =
 				"UPDATE tinnies SET tinnies = $1 WHERE user_id = $2 RETURNING *";
@@ -183,13 +138,10 @@ module.exports = {
 			// Setting tinnies record
 			pool.query(sql, [newTinnies, userID], (err, userData) => {
 				if (err) {
-					pool.end();
 					rej(Error("Unable to access user tinnies record"));
 				} else if (userData.rowCount === 0) {
-					pool.end();
 					rej(Error("Update failed"));
 				} else {
-					pool.end();
 					// True if tinnies record matches argument.
 					if (userData.rows[0].tinnies === newTinnies) {
 						res(true);
@@ -207,29 +159,17 @@ module.exports = {
 			@returns an object promise containing the user's data or an object with userNotFound === true
 		*/
 		return new Promise((res, rej) => {
-			// Connecting to PG database
-			const pool = new Pool({
-				user: process.env.PG_USER,
-				host: process.env.PG_URL,
-				database: process.env.DB_NAME,
-				password: process.env.PG_PASSWORD,
-				port: process.env.PG_PORT,
-			});
-
 			// Setting query
 			const sql = "SELECT * FROM users WHERE email=($1)";
 
 			// Getting user's data
 			pool.query(sql, [email], (err, userData) => {
 				if (err) {
-					pool.end();
 					rej(Error("Unable to access user record"));
 				} else {
 					if (userData.rowCount === 0) {
-						pool.end();
 						res({ userNotFound: true });
 					} else {
-						pool.end();
 						res(userData.rows[0]);
 					}
 				}
@@ -243,25 +183,14 @@ module.exports = {
 			@returns a promise that will resolve to an object containing the user's history rows
 		*/
 		return new Promise((res, rej) => {
-			// Connecting to PG database
-			const pool = new Pool({
-				user: process.env.PG_USER,
-				host: process.env.PG_URL,
-				database: process.env.DB_NAME,
-				password: process.env.PG_PASSWORD,
-				port: process.env.PG_PORT,
-			});
-
 			// Setting query
 			const sql = "SELECT * FROM history WHERE user_id=$1";
 
 			// Getting user's history
 			pool.query(sql, [user_ID], (err, userData) => {
 				if (err) {
-					pool.end();
 					rej(Error("Unable to access user history record"));
 				} else {
-					pool.end();
 					res(userData.rows);
 				}
 			});

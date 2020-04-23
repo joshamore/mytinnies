@@ -14,16 +14,12 @@ require("dotenv").config();
 require("./config/passport")(passport);
 
 /*
-	NOTE RE testing DB: 
-		- User ID 1 has a plaintext password of: "reeeeeeeeeee"
-		- User ID 2 has a plaintext password of: "cool stuff"
 
+TODO: delete in prod
 	in PG:
 	user 1 password = testybruhyas
 */
 
-// TODO: Below is for dev only remove before deploying
-const sqlite3 = require("sqlite3").verbose();
 // Create express server
 const app = express();
 
@@ -75,13 +71,3 @@ const PORT = process.env.PORT || 5000;
 
 // Starting server
 app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
-
-/////////////// Testing for pg
-const dbHelpers = require("./helpers/dbHelpers");
-
-dbHelpers
-	.getUserHistory(1)
-	.then((data) => {
-		console.log(data);
-	})
-	.catch((err) => console.log(err));

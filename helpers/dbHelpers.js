@@ -377,8 +377,13 @@ module.exports = {
 					pool.end();
 					rej(Error("Unable to access user record"));
 				} else {
-					pool.end();
-					res(userData.rows);
+					if (userData.rowCount === 0) {
+						pool.end();
+						res({ userNotFound: true });
+					} else {
+						pool.end();
+						res(userData.rows[0]);
+					}
 				}
 			});
 

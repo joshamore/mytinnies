@@ -1,7 +1,3 @@
-if (process.env.NODE_ENV !== "production") {
-	require("dotenv").config();
-}
-
 const express = require("express");
 const path = require("path");
 const bodyParser = require("body-parser");
@@ -11,17 +7,19 @@ const cors = require("cors");
 const expressLayouts = require("express-ejs-layouts");
 const flash = require("connect-flash");
 
+// DOTENV Config
+require("dotenv").config();
+
 // Passport Config
 require("./config/passport")(passport);
 
 /*
-	NOTE RE testing DB: 
-		- User ID 1 has a plaintext password of: "reeeeeeeeeee"
-		- User ID 2 has a plaintext password of: "cool stuff"
+
+TODO: delete in prod
+	in PG:
+	user 1 password = testybruhyas
 */
 
-// TODO: Below is for dev only remove before deploying
-const sqlite3 = require("sqlite3").verbose();
 // Create express server
 const app = express();
 

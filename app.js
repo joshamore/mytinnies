@@ -80,7 +80,7 @@ app.listen(PORT, () => console.log(`Server started on port ${PORT}`));
 const dbHelpers = require("./helpers/dbHelpers");
 
 dbHelpers
-	.updateTinnies(69, 1)
+	.getUserHistory(1)
 	.then((data) => {
 		console.log(data);
 	})

@@ -31,6 +31,7 @@ module.exports = {
 				[firstName, lastName, email, passwordHash],
 				(err, userData) => {
 					if (err) {
+						console.log("error in user certaion.");
 						pool.end();
 						rej(Error("Unable to create users record"));
 					} else if (userData.rowCount === 0) {
@@ -419,35 +420,57 @@ module.exports = {
 			@returns a promise that will resolve to an object containing the user's history
 		*/
 		return new Promise((res, rej) => {
-			// Opening DB connection
-			let db = new sqlite3.Database(
-				"./MyTinnies.db",
-				sqlite3.OPEN_READWRITE,
-				(err) => {
-					if (err) {
-						rej(Error("Unable to open DB"));
-					} else {
-						console.log("Connected to the SQlite database.");
-					}
-				}
-			);
+			// Connecting to PG database
+			const pool = new Pool({
+				user: process.env.PG_USER,
+				host: process.env.PG_URL,
+				database: process.env.DB_NAME,
+				password: process.env.PG_PASSWORD,
+				port: process.env.PG_PORT,
+			});
 
-			// Query to get user history data from DB
-			let sql = `SELECT * FROM history WHERE user_id=?`;
+			// Setting query
+			const sql = "SELECT * FROM history WHERE user_id=$1";
 
-			// Getting DB data and closing
-			db.all(sql, [user_ID], (err, rows) => {
+			// Getting user's history
+			pool.query(sql, [user_ID], (err, userData) => {
 				if (err) {
-					db.close();
-					rej(Error("Unable to access user record"));
-				} else if (rows === undefined) {
-					db.close();
-					res({ userNotFound: true });
+					pool.end();
+					rej(Error("Unable to access user history record"));
 				} else {
-					db.close();
-					res(rows);
+					pool.end();
+					res(userData.rows);
 				}
 			});
+			// // Opening DB connection
+			// let db = new sqlite3.Database(
+			// 	"./MyTinnies.db",
+			// 	sqlite3.OPEN_READWRITE,
+			// 	(err) => {
+			// 		if (err) {
+			// 			rej(Error("Unable to open DB"));
+			// 		} else {
+			// 			console.log("Connected to the SQlite database.");
+			// 		}
+			// 	}
+			// );
+
+			// // Query to get user history data from DB
+			// let sql = `SELECT * FROM history WHERE user_id=?`;
+
+			// // Getting DB data and closing
+			// db.all(sql, [user_ID], (err, rows) => {
+			// 	if (err) {
+			// 		db.close();
+			// 		rej(Error("Unable to access user record"));
+			// 	} else if (rows === undefined) {
+			// 		db.close();
+			// 		res({ userNotFound: true });
+			// 	} else {
+			// 		db.close();
+			// 		res(rows);
+			// 	}
+			// });
 		});
 	},
 };

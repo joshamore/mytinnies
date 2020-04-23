@@ -284,40 +284,71 @@ module.exports = {
 			// });
 		});
 	},
-	updateTinnies: (newTinnies, user) => {
+	updateTinnies: (newTinnies, userID) => {
 		/*
 			@args newTinnies = the updated number of tinnies for the current user
 
 			@returns a boolean promise with true if the update was successful or false if unsuccessful
 		*/
 		return new Promise((res, rej) => {
-			// Opening DB connection
-			let db = new sqlite3.Database(
-				"./MyTinnies.db",
-				sqlite3.OPEN_READWRITE,
-				(err) => {
-					if (err) {
-						rej(Error("Unable to open DB"));
+			// Connecting to PG database
+			const pool = new Pool({
+				user: process.env.PG_USER,
+				host: process.env.PG_URL,
+				database: process.env.DB_NAME,
+				password: process.env.PG_PASSWORD,
+				port: process.env.PG_PORT,
+			});
+
+			// Setting query
+			const sql =
+				"UPDATE tinnies SET tinnies = $1 WHERE user_id = $2 RETURNING *";
+
+			// Setting tinnies record
+			pool.query(sql, [newTinnies, userID], (err, userData) => {
+				if (err) {
+					pool.end();
+					rej(Error("Unable to access user tinnies record"));
+				} else if (userData.rowCount === 0) {
+					pool.end();
+					rej(Error("Update failed"));
+				} else {
+					pool.end();
+					// True if tinnies record matches argument.
+					if (userData.rows[0].tinnies === newTinnies) {
+						res(true);
 					} else {
-						console.log("Connected to the SQlite database.");
+						res(false);
 					}
 				}
-			);
-
-			// Query to update user's tinnnies
-			let sql = `UPDATE tinnies SET tinnies = ${newTinnies} WHERE user_id = ?`;
-
-			// Updating DB data and closing
-			db.run(sql, [user], (err) => {
-				if (err) {
-					db.close();
-					rej(Error("Unable to access user"));
-				} else {
-					db.close();
-					console.log(`New tinnies: ${newTinnies}`);
-					res(true);
-				}
 			});
+			// // Opening DB connection
+			// let db = new sqlite3.Database(
+			// 	"./MyTinnies.db",
+			// 	sqlite3.OPEN_READWRITE,
+			// 	(err) => {
+			// 		if (err) {
+			// 			rej(Error("Unable to open DB"));
+			// 		} else {
+			// 			console.log("Connected to the SQlite database.");
+			// 		}
+			// 	}
+			// );
+
+			// // Query to update user's tinnnies
+			// let sql = `UPDATE tinnies SET tinnies = ${newTinnies} WHERE user_id = ?`;
+
+			// // Updating DB data and closing
+			// db.run(sql, [user], (err) => {
+			// 	if (err) {
+			// 		db.close();
+			// 		rej(Error("Unable to access user"));
+			// 	} else {
+			// 		db.close();
+			// 		console.log(`New tinnies: ${newTinnies}`);
+			// 		res(true);
+			// 	}
+			// });
 		});
 	},
 	getUserFromEmail: (email) => {

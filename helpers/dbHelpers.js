@@ -250,7 +250,7 @@ module.exports = {
 					rej(Error("No tinnies record"));
 				} else {
 					pool.end();
-					res(userData.rows);
+					res(userData.rows[0]);
 				}
 			});
 
@@ -309,6 +309,8 @@ module.exports = {
 			pool.query(sql, [newTinnies, userID], (err, userData) => {
 				if (err) {
 					pool.end();
+					console.log(err);
+					console.log(`Got this ID: ${userID} and this tinnies: ${newTinnies}`);
 					rej(Error("Unable to access user tinnies record"));
 				} else if (userData.rowCount === 0) {
 					pool.end();

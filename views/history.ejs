@@ -16,7 +16,7 @@
 			<tr>
 				<td><%= date %> <%= %></td>
 				<td>
-					<%= parseInt(row.pos_or_neg) + 1 ? "Drank" : "Added" %>
+					<%= (parseInt(row.pos_or_neg) === -1) ? "Drank" : "Added" %>
 				</td>
 				<td><%= row.history_tinnies_count %></td>
 			</tr>

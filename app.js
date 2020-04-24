@@ -17,7 +17,7 @@ require("./config/passport")(passport);
 
 TODO: delete in prod
 	in PG:
-	user 1 password = testybruhyas
+	user 1 password = dankmemebro
 */
 
 // Create express server

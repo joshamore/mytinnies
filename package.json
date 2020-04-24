@@ -1,7 +1,7 @@
 {
 	"name": "tinnies",
 	"version": "1.0.0",
-	"description": "A helpful tool to track ya tinnies.",
+	"description": "BETA: A helpful tool to track ya tinnies.",
 	"main": "app.js",
 	"scripts": {
 		"start": "node app",

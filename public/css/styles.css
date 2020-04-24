@@ -4,8 +4,16 @@
 	width: 400px;
 }
 
+#tinnies {
+	margin-top: 5%;
+}
+
 #smashTinnie {
 	padding: 40px 40px;
 	width: 50%;
+	font-size: 200%;
+}
+
+#tinniesCount {
 	font-size: 200%;
 }

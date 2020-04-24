@@ -82,7 +82,7 @@ const renders = {
 				.then((tinnies) => {
 					document.getElementById(
 						"tinnies"
-					).innerHTML = `<h2>Ya Tinniez:</h2><div><p>${tinnies.tinnies}</p></div>`;
+					).innerHTML = `<h2>Ya Tinniez:</h2><div id="tinniesCount"><p class="text-info">${tinnies.tinnies}</p></div>`;
 				})
 				.catch((err) => {
 					console.error(err.message);

@@ -1,4 +1,4 @@
-![mytinnies header]("./readme_assets/mytinnies.jpg")
+![mytinnies header]("./readme_assets/mytinnies.png")
 
 # MyTinnies
 

@@ -1,12 +1,12 @@
 # MyTinnies
 
-A helpful tool to track ya tinnies.
+A helpful tool to track ya tinnies in the cloud.
 
 ## Why?
 
 You're driving home on a Friday after a hard week of work. You're about to go past the last bottleo and can't remember if you have any tinnies in the shed fridge. What do you do?
 
-Drive past and risk running out? Yeah, nah.
+Drive past and risk running out? _Yeah, nah._
 
 **You check MyTinnies.**
 
@@ -19,4 +19,5 @@ Check it out here: [MyTinnies](http://mytinnies.com).
 ### Test login details:
 
 **User:** test@example.com
+
 **Password:** testymctest123

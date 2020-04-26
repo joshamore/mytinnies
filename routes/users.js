@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 const passport = require("passport");
-const { ensureAuthenticated } = require("../config/auth");
 const userHelpers = require("../helpers/userHelpers");
 
 // Register user handle
@@ -104,14 +103,6 @@ router.get("/logout", (req, res) => {
 		// Redirects user to homepage if they're not logged in
 		res.redirect("/");
 	}
-});
-
-// Auth test route
-// Note: this route shows how you confirm auth (with ensureAuthenticated)
-// TODO: delete when finshed with setup of passport/sessions
-router.get("/auth", ensureAuthenticated, (req, res) => {
-	console.log("good");
-	res.send("AUTH YEAH");
 });
 
 module.exports = router;

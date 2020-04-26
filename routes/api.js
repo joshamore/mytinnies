@@ -25,7 +25,8 @@ router.post("/drinkTinnies/", ensureAuthenticated, (req, res) => {
         Subtracts a provided number of tinnies from the authenticated user's Tinnies table.
 
         @args drank = A JSON object field with the number of tinnies to be drank. Must be equal to or less than the
-        current total of Tinnies for the user.
+		current total of Tinnies for the user.
+		
         @retuns a success JSON object with the updated tinnies count for the user.
     */
 	if (typeof req.body.drank !== typeof 1) {
@@ -74,7 +75,8 @@ router.post("/addTinnies/", ensureAuthenticated, (req, res) => {
 	/*
         Adds a provided number of tinnies to the authenticated user's Tinnies table.
 
-        @args newTinnies = A JSON object field with the number of tinnies to be added.
+		@args newTinnies = A JSON object field with the number of tinnies to be added.
+		
         @retuns a success JSON object with the updated tinnies count for the user.
     */
 	dbHelpers

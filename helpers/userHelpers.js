@@ -4,7 +4,8 @@ const dbHelpers = require("./dbHelpers");
 module.exports = {
 	passwordHash: (plaintext) => {
 		/*
-            @args plaintext = plaintext user password.
+			@args plaintext = plaintext user password.
+			
             @returns a promise that will resolve with a hashed password (safe to store in DB)
         */
 		return new Promise((res, rej) => {
@@ -67,7 +68,7 @@ module.exports = {
 			@args email = the new user's email address
 			@args password = the new user's password in plaintext
 
-            @retrns a promise that will resolve with the new user's ID
+            @returns a promise that will resolve with the new user's ID
         */
 		try {
 			// Hashing password

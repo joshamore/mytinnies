@@ -1,7 +1,5 @@
-// TODO: remove in production
+// TODO: Update in production
 const DOMAIN = "http://localhost:5000";
-
-// NOTE: JS is written in an odd wasy to make the transiton to React easier.
 
 // Calls to backend API
 const api = {
@@ -23,7 +21,7 @@ const api = {
 			return Error("Failed to get tinnies");
 		}
 	},
-	drinkTinnie: async function () {
+	drinkTinnies: async function () {
 		/*
 			Reduces the current user's tinnies by 1.
 
@@ -90,7 +88,9 @@ const renders = {
 		}
 	},
 	errorAdd: function (errorMsg) {
-		// Renders error on add tinnies screen
+		/*
+			Renders an error message to DOM
+		*/
 		document.getElementById(
 			"alertHouse"
 		).innerHTML = `<div id="addAlert" class="alert alert-dismissible alert-danger">
@@ -111,7 +111,7 @@ if (window.location.href === `${DOMAIN}/dashboard`) {
 		smashTinnieSOUND.play();
 
 		// Updated tinnies DB count and rerenders count on page
-		api.drinkTinnie().then((res) => {
+		api.drinkTinnies().then((res) => {
 			if (res) renders.tinniesCountDash();
 		});
 	});

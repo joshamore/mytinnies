@@ -1,5 +1,5 @@
 <p align="center">
-  <img width="460" height="300" src="./readme_assets/mytinnies.jpg" alt="mytinnies header">
+  <img src="./readme_assets/mytinnies.jpg" alt="mytinnies header">
 </p>
 
 # MyTinnies

@@ -1,4 +1,6 @@
-![mytinnies header](./readme_assets/mytinnies.jpg)
+<p align="center">
+  <img width="460" height="300" src="./readme_assets/mytinnies.jpg" alt="mytinnies header">
+</p>
 
 # MyTinnies
 

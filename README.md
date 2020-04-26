@@ -1,3 +1,5 @@
+![mytinnies header]("./readme_assets/mytinnies.jpg")
+
 # MyTinnies
 
 A helpful tool to track ya tinnies in the cloud.

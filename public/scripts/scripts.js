@@ -1,5 +1,5 @@
 // TODO: Update in production
-const DOMAIN = "https://mytinnies.herokuapp.com/";
+const DOMAIN = "http://localhost:5000";
 
 // Calls to backend API
 const api = {

@@ -13,13 +13,6 @@ require("dotenv").config();
 // Passport Config
 require("./config/passport")(passport);
 
-/*
-
-TODO: delete in prod
-	in PG:
-	user 1 password = dankmemebro
-*/
-
 // Create express server
 const app = express();
 
